@@ -1,7 +1,101 @@
+import 'package:finance_tracker/core/widgets/custom_text.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 class CustomButton {
+  static ElevatedButton primary(
+    String text, {
+    IconData? icon,
+    required BuildContext context,
+    Function? onPressed,
+  }) {
+    return ElevatedButton(
+      onPressed: onPressed != null
+          ? () {
+              onPressed();
+            }
+          : null,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Theme.of(context).primaryColor,
+        foregroundColor: Theme.of(context).colorScheme.onPrimary,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
+        padding: const EdgeInsets.all(16),
+      ),
+      child: icon == null
+          ? CustomText.normal(
+              text,
+              context: context,
+              isBold: true,
+              color: Theme.of(context).colorScheme.onPrimary,
+            )
+          : Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              spacing: 8,
+              children: [
+                Icon(
+                  icon,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                  fill: 1,
+                ),
+                CustomText.normal(
+                  text,
+                  context: context,
+                  isBold: true,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
+              ],
+            ),
+    );
+  }
+
+  static ElevatedButton google(
+    String text, {
+    Function? onPressed,
+    required BuildContext context,
+  }) {
+    return ElevatedButton(
+      onPressed: onPressed != null
+          ? () {
+              onPressed();
+            }
+          : null,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
+        padding: const EdgeInsets.all(16),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        spacing: 16,
+        children: [
+          Image.asset('assets/images/google.png', width: 24),
+          CustomText.normal(
+            text,
+            context: context,
+            isBold: true,
+            color: Colors.black,
+          ),
+        ],
+      ),
+    );
+  }
+
+  static Widget redEye(RxBool isObscure, {required BuildContext context}) {
+    return GestureDetector(
+      onTap: () {
+        isObscure.value = !isObscure.value;
+      },
+      child: Icon(
+        isObscure.value
+            ? Icons.visibility_outlined
+            : Icons.visibility_off_outlined,
+        color: Theme.of(context).primaryColor,
+      ),
+    );
+  }
+
   static IconButton icon(
     IconData icon, {
     required BuildContext context,

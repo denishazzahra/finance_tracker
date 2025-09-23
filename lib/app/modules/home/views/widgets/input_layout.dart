@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../core/widgets/custom_text.dart';
-import '../../../../../core/widgets/custom_text_field.dart';
 
 class InputLayout {
-  static wallet({required BuildContext context}) {
+  static Dialog wallet({required BuildContext context}) {
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
       child: Container(

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
-import '../../dashboard/views/widgets/input_layout.dart';
+import 'widgets/input_layout.dart';
 import '../controllers/home_controller.dart';
 import 'widgets/custom_app_bar.dart';
 import 'widgets/custom_navigation_bar.dart';
