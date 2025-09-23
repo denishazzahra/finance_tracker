@@ -49,6 +49,33 @@ class CustomButton {
     );
   }
 
+  static TextButton text(
+    String text, {
+    required BuildContext context,
+    Function? onPressed,
+    Color? color,
+  }) {
+    return TextButton(
+      onPressed: onPressed != null
+          ? () {
+              onPressed();
+            }
+          : null,
+      style: TextButton.styleFrom(
+        backgroundColor: Colors.transparent,
+        foregroundColor: color ?? Theme.of(context).colorScheme.onSurface,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
+        padding: const EdgeInsets.all(16),
+      ),
+      child: CustomText.normal(
+        text,
+        context: context,
+        isBold: true,
+        color: color ?? Theme.of(context).colorScheme.onSurface,
+      ),
+    );
+  }
+
   static ElevatedButton google(
     String text, {
     Function? onPressed,

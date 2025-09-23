@@ -72,7 +72,7 @@ class SignUpView extends GetView<SignUpController> {
                 CustomButton.primary(
                   "Sign Up",
                   context: context,
-                  onPressed: () {},
+                  onPressed: controller.signUpWithEmailAndPassword,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

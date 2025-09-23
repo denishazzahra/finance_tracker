@@ -1,4 +1,6 @@
+import 'package:finance_tracker/core/services/auth_service.dart';
 import 'package:flutter/material.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 import '../../../../../core/theme/theme_service.dart';
 import '../../../../../core/widgets/custom_button.dart';
@@ -8,11 +10,13 @@ class CustomAppBar extends StatelessWidget {
   final String title;
   final String currentThemeName;
   final Function onChanged;
+  final Function confirmLogout;
   const CustomAppBar({
     super.key,
     required this.title,
     required this.currentThemeName,
     required this.onChanged,
+    required this.confirmLogout,
   });
 
   @override
@@ -25,6 +29,12 @@ class CustomAppBar extends StatelessWidget {
           items: ThemeService.themes,
           onChanged: onChanged,
           context: context,
+        ),
+        CustomButton.icon(
+          Symbols.logout,
+          context: context,
+          onPressed: confirmLogout,
+          color: Theme.of(context).colorScheme.onSurface,
         ),
       ],
     );

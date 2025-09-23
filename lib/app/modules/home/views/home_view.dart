@@ -20,6 +20,7 @@ class HomeView extends GetView<HomeController> {
             title: controller.getCurrentPage().name,
             currentThemeName: controller.currentThemeMode.value,
             onChanged: controller.updateCurrentTheme,
+            confirmLogout: controller.confirmLogout,
           ),
         ),
       ),

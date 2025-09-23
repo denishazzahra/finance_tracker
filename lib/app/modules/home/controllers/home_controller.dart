@@ -1,10 +1,13 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
+import '../../../../core/services/auth_service.dart';
 import '../../../../core/theme/theme_service.dart';
 import '../../../data/models/page_model.dart';
 import '../../dashboard/views/dashboard_view.dart';
 import '../../history/views/history_view.dart';
+import '../views/widgets/confirm_logout.dart';
 
 class HomeController extends GetxController {
   List<PageModel> pages = [
@@ -36,5 +39,22 @@ class HomeController extends GetxController {
 
   void toggleMenu() {
     isMenuExpanded.value = !isMenuExpanded.value;
+  }
+
+  void confirmLogout() async {
+    try {
+      await Get.dialog(ConfirmLogout(logout: logout));
+    } catch (e) {
+      Get.snackbar(
+        'Logout failed',
+        'Please try again later.',
+        margin: EdgeInsets.all(16),
+      );
+    }
+  }
+
+  void logout() async {
+    await AuthService.logout();
+    Get.offNamed('/login');
   }
 }
