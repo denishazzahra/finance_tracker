@@ -101,6 +101,7 @@ class CustomTheme {
         return TextStyle(color: darkScheme.onSurface);
       }),
     ),
+    snackBarTheme: SnackBarThemeData(backgroundColor: Colors.black),
     extensions: [CustomColor.financeDark],
   );
 }

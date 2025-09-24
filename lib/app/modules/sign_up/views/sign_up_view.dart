@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 import '../../../../core/widgets/custom_button.dart';
-import '../../../../core/widgets/custom_divider.dart';
 import '../../../../core/widgets/custom_text.dart';
 import '../../../../core/widgets/custom_text_field.dart';
 import '../controllers/sign_up_controller.dart';
@@ -23,16 +22,25 @@ class SignUpView extends GetView<SignUpController> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               spacing: 12,
               children: [
-                Image.asset('assets/images/login.png', height: 128),
+                Image.asset('assets/images/signup.png', height: 128),
                 SizedBox(height: 12),
-                CustomText.h1("Login", context: context),
+                CustomText.h1("Sign Up", context: context),
                 SizedBox(height: 12),
+                CustomTextField.auth(
+                  controller.fullName,
+                  label: 'Full Name',
+                  context: context,
+                  prefixIcon: Icon(
+                    Symbols.person,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                ),
                 CustomTextField.auth(
                   controller.email,
                   label: 'Email',
                   context: context,
                   prefixIcon: Icon(
-                    Symbols.person,
+                    Symbols.mail,
                     color: Theme.of(context).primaryColor,
                   ),
                 ),
@@ -91,12 +99,6 @@ class SignUpView extends GetView<SignUpController> {
                       ),
                     ),
                   ],
-                ),
-                CustomDivider.withText('or', context: context),
-                CustomButton.google(
-                  "Sign up with Google",
-                  context: context,
-                  onPressed: () {},
                 ),
               ],
             ),

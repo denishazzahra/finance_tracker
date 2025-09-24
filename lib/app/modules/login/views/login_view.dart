@@ -23,7 +23,7 @@ class LoginView extends GetView<LoginController> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               spacing: 12,
               children: [
-                Image.asset('assets/images/signup.png', height: 128),
+                Image.asset('assets/images/login.png', height: 128),
                 SizedBox(height: 12),
                 CustomText.h1("Login", context: context),
                 SizedBox(height: 12),
@@ -32,7 +32,7 @@ class LoginView extends GetView<LoginController> {
                   label: 'Email',
                   context: context,
                   prefixIcon: Icon(
-                    Symbols.person,
+                    Symbols.mail,
                     color: Theme.of(context).primaryColor,
                   ),
                 ),
@@ -53,11 +53,20 @@ class LoginView extends GetView<LoginController> {
                   ),
                 ),
                 SizedBox(height: 12),
-                CustomButton.primary(
-                  "Login",
-                  context: context,
-                  onPressed: controller.login,
-                ),
+                Obx(() {
+                  if (controller.isLoading.value) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    );
+                  }
+                  return CustomButton.primary(
+                    "Login",
+                    context: context,
+                    onPressed: controller.login,
+                  );
+                }),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -80,7 +89,7 @@ class LoginView extends GetView<LoginController> {
                 CustomButton.google(
                   "Login with Google",
                   context: context,
-                  onPressed: () {},
+                  onPressed: controller.loginWithGoogle,
                 ),
               ],
             ),
