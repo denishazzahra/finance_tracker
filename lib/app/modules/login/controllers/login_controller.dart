@@ -27,11 +27,37 @@ class LoginController extends GetxController {
   Future<void> login() async {
     isLoading.value = true;
     try {
-      await AuthService.loginWithEmailAndPassword(
+      final User? user = await AuthService.loginWithEmailAndPassword(
         email: email.text.trim(),
         password: password.text,
       );
       Get.offAllNamed('/home'); // navigate on success
+      Get.snackbar(
+        'Login success',
+        "Welcome, ${user?.displayName ?? "new user!"}",
+        margin: EdgeInsets.all(16),
+      );
+    } on FirebaseAuthException catch (e) {
+      Get.snackbar(
+        'Login failed',
+        e.message ?? 'Unknown error',
+        margin: EdgeInsets.all(16),
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> loginWithGoogle() async {
+    try {
+      isLoading.value = true;
+      User? user = await AuthService.loginWithGoogle();
+      Get.offAllNamed('/home'); // navigate on success
+      Get.snackbar(
+        'Login success',
+        "Welcome, ${user?.displayName ?? "new user!"}",
+        margin: EdgeInsets.all(16),
+      );
     } on FirebaseAuthException catch (e) {
       Get.snackbar(
         'Login failed',

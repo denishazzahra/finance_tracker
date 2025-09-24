@@ -1,4 +1,3 @@
-import 'package:finance_tracker/core/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 

@@ -1,4 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService {
   static final _auth = FirebaseAuth.instance;
@@ -7,12 +10,18 @@ class AuthService {
   static Future<User?> signUpWithEmailAndPassword({
     required String email,
     required String password,
+    required String displayName,
   }) async {
     final credentials = await _auth.createUserWithEmailAndPassword(
       email: email,
       password: password,
     );
-    return credentials.user;
+    final User? user = credentials.user;
+    if (user != null) {
+      await user.updateDisplayName(displayName);
+      await user.reload();
+    }
+    return user;
   }
 
   // Login with email/password
@@ -25,6 +34,38 @@ class AuthService {
       password: password,
     );
     return credentials.user;
+  }
+
+  static Future<User?> loginWithGoogle() async {
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    User? user;
+
+    if (kIsWeb) {
+      GoogleAuthProvider googleProvider = GoogleAuthProvider();
+      final clientId = dotenv.env['GOOGLE_WEB_CLIENT_ID'];
+
+      googleProvider.setCustomParameters({'client_id': clientId});
+
+      final UserCredential userCredential = await auth.signInWithPopup(
+        googleProvider,
+      );
+      user = userCredential.user;
+    } else {
+      final GoogleSignInAccount googleUser = await GoogleSignIn.instance
+          .authenticate();
+
+      final GoogleSignInAuthentication googleAuth = googleUser.authentication;
+
+      final credential = GoogleAuthProvider.credential(
+        idToken: googleAuth.idToken,
+      );
+
+      final UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithCredential(credential);
+      user = userCredential.user;
+    }
+
+    return user;
   }
 
   static Future<void> logout() async {

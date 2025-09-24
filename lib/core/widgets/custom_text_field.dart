@@ -1,3 +1,4 @@
+import 'package:finance_tracker/core/utils/thousand_separator_input_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -22,7 +23,10 @@ class CustomTextField {
       readOnly: isReadOnly,
       keyboardType: isNumOnly ? TextInputType.number : TextInputType.text,
       inputFormatters: isNumOnly
-          ? [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*'))]
+          ? [
+              FilteringTextInputFormatter.digitsOnly,
+              ThousandsSeparatorInputFormatter(),
+            ]
           : null,
       style: TextStyle(
         color: textColor ?? Theme.of(context).colorScheme.onSurface,

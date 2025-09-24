@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import '../../../../core/services/auth_service.dart';
 
 class SignUpController extends GetxController {
+  late final TextEditingController fullName;
   late final TextEditingController email;
   late final TextEditingController password;
   late final TextEditingController confirmPassword;
@@ -15,6 +16,7 @@ class SignUpController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    fullName = TextEditingController();
     email = TextEditingController();
     password = TextEditingController();
     confirmPassword = TextEditingController();
@@ -23,6 +25,7 @@ class SignUpController extends GetxController {
   @override
   void onClose() {
     super.onClose();
+    fullName.dispose();
     email.dispose();
     password.dispose();
     confirmPassword.dispose();
@@ -42,8 +45,14 @@ class SignUpController extends GetxController {
       await AuthService.signUpWithEmailAndPassword(
         email: email.text.trim(),
         password: password.text,
+        displayName: fullName.text.trim(),
       );
-      Get.offAllNamed('/home'); // navigate on success
+      Get.back(); // navigate on success
+      Get.snackbar(
+        'Sign up success',
+        "Please login to continue.",
+        margin: EdgeInsets.all(16),
+      );
     } on FirebaseAuthException catch (e) {
       String message = '';
       if (e.code == 'weak-password') {

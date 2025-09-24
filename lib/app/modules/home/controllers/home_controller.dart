@@ -16,7 +16,6 @@ class HomeController extends GetxController {
   ];
   RxInt currentIndex = 0.obs;
   RxString currentThemeMode = 'Dark'.obs;
-  RxBool isMenuExpanded = false.obs;
 
   String getCurrentTheme() => ThemeService().name;
 
@@ -35,10 +34,6 @@ class HomeController extends GetxController {
 
   void changePage(int index) {
     currentIndex.value = index;
-  }
-
-  void toggleMenu() {
-    isMenuExpanded.value = !isMenuExpanded.value;
   }
 
   void confirmLogout() async {
