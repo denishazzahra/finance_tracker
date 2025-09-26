@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
+import '../theme/finance_color.dart';
+
 class CustomButton {
   static ElevatedButton primary(
     String text, {
@@ -46,6 +48,34 @@ class CustomButton {
                 ),
               ],
             ),
+    );
+  }
+
+  static ElevatedButton danger(
+    String text, {
+    required BuildContext context,
+    Function? onPressed,
+  }) {
+    return ElevatedButton(
+      onPressed: onPressed != null
+          ? () {
+              onPressed();
+            }
+          : null,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Theme.of(context).extension<FinanceColors>()?.expense,
+        foregroundColor: Theme.of(
+          context,
+        ).extension<FinanceColors>()?.onExpense,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
+        padding: const EdgeInsets.all(16),
+      ),
+      child: CustomText.normal(
+        text,
+        context: context,
+        isBold: true,
+        color: Theme.of(context).extension<FinanceColors>()?.onExpense,
+      ),
     );
   }
 

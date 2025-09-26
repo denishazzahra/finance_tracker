@@ -32,12 +32,20 @@ class WalletModel {
     );
   }
 
-  Map<String, dynamic> toJson({bool isEdit = false}) {
+  Map<String, dynamic> toJson({
+    bool isEdit = false,
+    bool isTransaction = false,
+  }) {
     return {
+      if (isTransaction) 'id': id,
       'name': name,
-      'balance': balance,
+      if (balance != null) 'balance': balance,
       'type': type,
       (isEdit ? 'updatedAt' : 'createdAt'): FieldValue.serverTimestamp(),
     };
+  }
+
+  WalletModel removeBalance() {
+    return WalletModel(id: id, balance: null, type: type);
   }
 }

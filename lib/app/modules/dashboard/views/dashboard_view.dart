@@ -25,7 +25,6 @@ class DashboardView extends GetView<DashboardController> {
               FloatingActionButton(
                 onPressed: () => InputLayout.showBottomSheet(
                   content: InputLayout.wallet(context: context),
-                  context: context,
                 ),
                 tooltip: "Add new wallet",
                 shape: CircleBorder(),
@@ -33,8 +32,10 @@ class DashboardView extends GetView<DashboardController> {
                 child: Icon(Symbols.account_balance_wallet),
               ),
               FloatingActionButton(
-                onPressed: () {},
-                tooltip: "Move money",
+                onPressed: () => InputLayout.showBottomSheet(
+                  content: InputLayout.transfer(context: context),
+                ),
+                tooltip: "Transfer money",
                 shape: CircleBorder(),
                 mini: true,
                 child: Icon(Symbols.swap_horiz),

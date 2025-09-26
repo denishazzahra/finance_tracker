@@ -34,11 +34,11 @@ class BalanceCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           spacing: 8,
           children: [
-            CustomText.normal("Balance", context: context, color: onPrimary),
+            CustomText.normal("Balance", color: onPrimary, context: context),
             CustomText.h1(
               CustomConverter.doubleToCurrency(balance),
-              context: context,
               color: onPrimary,
+              context: context,
             ),
             CustomText.small(
               'Last updated: $lastUpdated',
