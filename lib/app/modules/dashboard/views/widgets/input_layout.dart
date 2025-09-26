@@ -188,6 +188,59 @@ class InputLayout {
     );
   }
 
+  static Widget transaction({required BuildContext context}) {
+    controller.resetForm();
+    return template(
+      title: "Add transaction",
+      context: context,
+      onSubmit: controller.addTransaction,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        spacing: 16,
+        children: [
+          CustomDropdown.obj(
+            "Wallet",
+            controller.fromWallet.value,
+            controller.wallets,
+            controller.onChangeFrom,
+          ),
+          CustomTextField.normal(
+            controller.amount,
+            context: context,
+            label: "Amount",
+            isNumOnly: true,
+            prefixIcon: Padding(
+              padding: EdgeInsets.all(12),
+              child: CustomText.normal("Rp", context: context),
+            ),
+          ),
+          CustomDropdown.str(
+            "Transaction type",
+            controller.transactionType.value,
+            transactionTypeOptions,
+            controller.onChangeTransactionType,
+          ),
+          Obx(
+            () => CustomDropdown.str(
+              "Category",
+              controller.transactionCategory.value,
+              transactionCategoryOptions(
+                isIncome: controller.transactionType.value == "Income",
+              ),
+              controller.onChangeTransactionCategory,
+            ),
+          ),
+          CustomTextField.normal(
+            controller.desc,
+            context: context,
+            label: "Description (optional)",
+          ),
+        ],
+      ),
+    );
+  }
+
   static void showBottomSheet({required Widget content}) {
     controller.isMenuExpanded.value = false;
     Get.bottomSheet(

@@ -22,7 +22,7 @@ class SignUpView extends GetView<SignUpController> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               spacing: 12,
               children: [
-                Image.asset('assets/images/signup.png', height: 128),
+                Image.asset('assets/images/signup.png', height: 196),
                 SizedBox(height: 12),
                 CustomText.h1("Sign Up", context: context),
                 SizedBox(height: 12),

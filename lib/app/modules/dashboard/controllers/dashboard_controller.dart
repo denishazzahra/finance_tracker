@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../../core/services/transaction_service.dart';
 import '../../../../core/services/wallet_service.dart';
+import '../../../data/models/transaction_model.dart';
 import '../../../data/models/transfer_model.dart';
 import '../../../data/models/wallet_model.dart';
 
@@ -9,10 +11,11 @@ class DashboardController extends GetxController {
   RxBool isMenuExpanded = false.obs;
   RxBool isLoading = true.obs;
   RxDouble totalBalance = 0.0.obs;
-  late final TextEditingController walletName, amount, adminFee;
+  late final TextEditingController walletName, amount, adminFee, desc;
   RxList<WalletModel> wallets = <WalletModel>[].obs;
   Rx<String?> walletType = Rx<String?>(null);
   Rx<String?> transactionType = Rx<String?>(null);
+  Rx<String?> transactionCategory = Rx<String?>(null);
   Rx<DateTime> lastUpdated = DateTime.now().obs;
   Rx<WalletModel?> fromWallet = Rx<WalletModel?>(null);
   Rx<WalletModel?> toWallet = Rx<WalletModel?>(null);
@@ -25,6 +28,7 @@ class DashboardController extends GetxController {
     walletName = TextEditingController();
     amount = TextEditingController();
     adminFee = TextEditingController();
+    desc = TextEditingController();
   }
 
   @override
@@ -33,6 +37,7 @@ class DashboardController extends GetxController {
     walletName.dispose();
     amount.dispose();
     adminFee.dispose();
+    desc.dispose();
   }
 
   Future<void> initializeData() async {
@@ -63,10 +68,21 @@ class DashboardController extends GetxController {
     selectedWallet.value = null;
     fromWallet.value = null;
     toWallet.value = null;
+    transactionCategory.value = null;
+    desc.clear();
   }
 
   void onChangeType(String val) {
     walletType.value = val;
+  }
+
+  void onChangeTransactionType(String val) {
+    transactionType.value = val;
+    transactionCategory.value = null;
+  }
+
+  void onChangeTransactionCategory(String val) {
+    transactionCategory.value = val;
   }
 
   void onChangeFrom(WalletModel val) {
@@ -111,6 +127,49 @@ class DashboardController extends GetxController {
       Get.snackbar(
         'Failed',
         "Failed to create wallet: ${e.toString()}",
+        margin: EdgeInsets.all(16),
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> addTransaction() async {
+    try {
+      if (fromWallet.value == null ||
+          amount.text.trim().isEmpty ||
+          transactionType.value == null ||
+          transactionCategory.value == null) {
+        Get.snackbar(
+          'Empty field',
+          "Please fill all the fields before continuing.",
+          margin: EdgeInsets.all(16),
+        );
+      } else {
+        isLoading.value = true;
+        TransactionModel transaction = TransactionModel(
+          wallet: fromWallet.value,
+          amount: double.tryParse(
+            amount.text.trim().replaceAll(RegExp(r'[^0-9]'), ''),
+          ),
+          type: transactionType.value,
+          category: transactionCategory.value,
+          desc: desc.text.trim(),
+        );
+        await TransactionService.create(transaction);
+        Get.back();
+        await Future.delayed(Duration(milliseconds: 100));
+        Get.snackbar(
+          'Success',
+          "Transaction added successfully.",
+          margin: EdgeInsets.all(16),
+        );
+        await getAllWallets();
+      }
+    } catch (e) {
+      Get.snackbar(
+        'Failed',
+        "Failed to add transaction: ${e.toString()}",
         margin: EdgeInsets.all(16),
       );
     } finally {
@@ -212,14 +271,14 @@ class DashboardController extends GetxController {
       await Future.delayed(Duration(milliseconds: 100));
       Get.snackbar(
         'Success',
-        "Wallet updated successfully.",
+        "Wallet deleted successfully.",
         margin: EdgeInsets.all(16),
       );
       await getAllWallets();
     } catch (e) {
       Get.snackbar(
         'Failed',
-        "Failed to update wallet: ${e.toString()}",
+        "Failed to delete wallet: ${e.toString()}",
         margin: EdgeInsets.all(16),
       );
     } finally {

@@ -41,7 +41,8 @@ class WalletModel {
       'name': name,
       if (balance != null) 'balance': balance,
       'type': type,
-      (isEdit ? 'updatedAt' : 'createdAt'): FieldValue.serverTimestamp(),
+      if (!isEdit) 'createdAt': FieldValue.serverTimestamp(),
+      'updatedAt': FieldValue.serverTimestamp(),
     };
   }
 

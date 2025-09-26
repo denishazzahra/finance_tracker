@@ -41,7 +41,9 @@ class DashboardView extends GetView<DashboardController> {
                 child: Icon(Symbols.swap_horiz),
               ),
               FloatingActionButton(
-                onPressed: () {},
+                onPressed: () => InputLayout.showBottomSheet(
+                  content: InputLayout.transaction(context: context),
+                ),
                 tooltip: "Insert cashflow",
                 shape: CircleBorder(),
                 mini: true,
@@ -61,25 +63,21 @@ class DashboardView extends GetView<DashboardController> {
       ),
       body: RefreshIndicator(
         onRefresh: () => controller.initializeData(),
-        child: Obx(
-          () => Skeletonizer(
-            enabled: controller.isLoading.value,
-            child: ListView(
-              padding: EdgeInsets.all(16),
-              children: [
-                Obx(
-                  () => BalanceCard(
-                    balance: controller.totalBalance.value,
-                    lastUpdated: CustomConverter.datetimeToDisplay(
-                      controller.lastUpdated.value,
-                    ),
-                  ),
+        child: ListView(
+          padding: EdgeInsets.all(16),
+          children: [
+            Obx(
+              () => BalanceCard(
+                balance: controller.totalBalance.value,
+                lastUpdated: CustomConverter.datetimeToDisplay(
+                  controller.lastUpdated.value,
                 ),
-                SizedBox(height: 16),
-                WalletsListCard(),
-              ],
+                isLoading: controller.isLoading.value,
+              ),
             ),
-          ),
+            SizedBox(height: 16),
+            WalletsListCard(),
+          ],
         ),
       ),
     );
