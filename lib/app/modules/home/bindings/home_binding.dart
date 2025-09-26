@@ -2,6 +2,7 @@ import 'package:finance_tracker/app/modules/dashboard/controllers/dashboard_cont
 import 'package:get/get.dart';
 
 import '../../history/controllers/history_controller.dart';
+import '../../insight/controllers/insight_controller.dart';
 import '../controllers/home_controller.dart';
 
 class HomeBinding extends Bindings {
@@ -10,5 +11,6 @@ class HomeBinding extends Bindings {
     Get.lazyPut<HomeController>(() => HomeController(), fenix: true);
     Get.lazyPut<DashboardController>(() => DashboardController(), fenix: true);
     Get.lazyPut<HistoryController>(() => HistoryController(), fenix: true);
+    Get.lazyPut<InsightController>(() => InsightController(), fenix: true);
   }
 }

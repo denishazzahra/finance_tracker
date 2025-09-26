@@ -11,19 +11,19 @@ class CustomColor {
   static final Color onCardLight = Color(0xFF121212);
   static final Color onChipLight = Color(0xFF121212);
   static final financeLight = FinanceColors(
-    income: Colors.green.shade200,
+    income: Colors.green.shade100,
     onIncome: Colors.green.shade800,
-    expense: Colors.red.shade200,
+    expense: Colors.red.shade100,
     onExpense: Colors.red.shade700,
-    ewallet: Colors.blue.shade200,
+    ewallet: Colors.blue.shade100,
     onEwallet: Colors.blue.shade800,
-    bank: Colors.deepPurple.shade200,
+    bank: Colors.deepPurple.shade100,
     onBank: Colors.deepPurple.shade800,
-    cash: Colors.pink.shade200,
+    cash: Colors.pink.shade100,
     onCash: Colors.pink.shade700,
-    others: Colors.cyan.shade200,
+    others: Colors.cyan.shade100,
     onOthers: Colors.cyan.shade800,
-    stock: Colors.deepOrange.shade200,
+    stock: Colors.deepOrange.shade100,
     onStock: Colors.deepOrange.shade700,
   );
 
@@ -37,9 +37,9 @@ class CustomColor {
   static final Color onChipDark = Color(0xFFFBFBFB);
   static final financeDark = FinanceColors(
     income: Colors.green.shade700,
-    onIncome: Colors.green.shade200,
-    expense: Colors.red.shade700,
-    onExpense: Colors.red.shade200,
+    onIncome: Colors.green.shade100,
+    expense: Colors.red.shade900,
+    onExpense: Colors.red.shade100,
     ewallet: Colors.blue.shade700,
     onEwallet: Colors.blue.shade100,
     bank: Colors.deepPurple.shade700,
