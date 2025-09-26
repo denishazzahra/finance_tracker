@@ -27,18 +27,39 @@ class TransactionModel {
     TransferModel transfer, {
     bool isFrom = true,
   }) {
-    String desc = isFrom
-        ? "TO ${transfer.to.name} WITH ADMIN FEE ${CustomConverter.doubleToCurrency(transfer.adminFee)}"
-        : "FROM ${transfer.from.name}";
+    bool isCash = transfer.to.name == "Cash";
+    if (isFrom) {
+      String desc =
+          "${isCash ? 'WITHDRAWAL' : 'TOP-UP'} ${CustomConverter.doubleToCurrency(transfer.amount)} TO ${transfer.to.name} WITH ADMIN FEE ${CustomConverter.doubleToCurrency(transfer.adminFee)}";
+      return TransactionModel(
+        wallet: transfer.from,
+        amount: transfer.amount + transfer.adminFee,
+        type: 'Expense',
+        category: isCash ? 'Others' : 'Top-up',
+        desc: desc,
+      );
+    } else {
+      String desc =
+          "${isCash ? 'WITHDRAWAL' : 'TOP-UP'} ${CustomConverter.doubleToCurrency(transfer.amount)} FROM ${transfer.from.name}";
+      return TransactionModel(
+        wallet: transfer.to,
+        amount: transfer.amount,
+        type: isCash ? 'Others' : 'Income',
+        category: 'Top-up',
+        desc: desc,
+      );
+    }
+  }
+
+  factory TransactionModel.fromJson(Map<String, dynamic> json) {
     return TransactionModel(
-      wallet: isFrom ? transfer.from : transfer.to,
-      amount: isFrom
-          ? -1 * (transfer.amount + transfer.adminFee)
-          : transfer.amount,
-      type: isFrom ? 'Expense' : 'Income',
-      category: "Top-up",
-      desc:
-          "${transfer.to.name == 'Cash' ? 'WITHDRAWAL' : 'TOP-UP'} ${CustomConverter.doubleToCurrency(transfer.amount)} $desc",
+      id: json['id'],
+      wallet: WalletModel.fromJson(json['wallet']),
+      amount: json['amount'],
+      type: json['type'],
+      category: json['category'],
+      desc: json['desc'],
+      dateTime: json['dateTime'],
     );
   }
 
