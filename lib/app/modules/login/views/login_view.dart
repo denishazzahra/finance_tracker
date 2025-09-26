@@ -23,7 +23,7 @@ class LoginView extends GetView<LoginController> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               spacing: 12,
               children: [
-                Image.asset('assets/images/login.png', height: 128),
+                Image.asset('assets/images/login.png', height: 196),
                 SizedBox(height: 12),
                 CustomText.h1("Login", context: context),
                 SizedBox(height: 12),

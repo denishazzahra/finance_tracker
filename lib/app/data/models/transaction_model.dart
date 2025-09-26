@@ -33,7 +33,7 @@ class TransactionModel {
           "${isCash ? 'WITHDRAWAL' : 'TOP-UP'} ${CustomConverter.doubleToCurrency(transfer.amount)} TO ${transfer.to.name} WITH ADMIN FEE ${CustomConverter.doubleToCurrency(transfer.adminFee)}";
       return TransactionModel(
         wallet: transfer.from,
-        amount: transfer.amount + transfer.adminFee,
+        amount: -(transfer.amount + transfer.adminFee),
         type: 'Expense',
         category: isCash ? 'Others' : 'Top-up',
         desc: desc,
@@ -59,14 +59,14 @@ class TransactionModel {
       type: json['type'],
       category: json['category'],
       desc: json['desc'],
-      dateTime: json['dateTime'],
+      dateTime: (json['dateTime'] as Timestamp).toDate(),
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'wallet': wallet?.toJson(isTransaction: true),
-      'amount': amount,
+      'amount': type == "Income" ? amount : -amount!,
       'type': type,
       'category': category,
       'desc': desc,

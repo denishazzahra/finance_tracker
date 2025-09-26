@@ -79,21 +79,12 @@ class WalletService {
         throw Exception("Wallet not found");
       }
 
-      print('hereeee');
-      print(transfer.from.id);
-      print(transfer.to.id);
-
       final fromBalance = (fromSnap['balance'] as num).toDouble();
       final totalDeduction = transfer.amount + transfer.adminFee;
-
-      print(fromBalance);
-      print(totalDeduction);
 
       if (fromBalance < totalDeduction) {
         throw Exception("Not enough balance in source wallet");
       }
-
-      print("aaaaa");
 
       // Update both atomically
       transaction.update(fromRef, {
@@ -103,13 +94,32 @@ class WalletService {
       transaction.update(toRef, {
         'balance': FieldValue.increment(transfer.amount),
       });
-
-      print("bbbb");
     });
 
-    await TransactionService.create(TransactionModel.fromTransfer(transfer));
+    await TransactionService.create(
+      TransactionModel.fromTransfer(transfer),
+      isTopup: true,
+    );
     await TransactionService.create(
       TransactionModel.fromTransfer(transfer, isFrom: false),
+      isTopup: true,
     );
+  }
+
+  static Future<void> updateBalance({
+    required WalletModel wallet,
+    required double amount,
+  }) async {
+    final user = _auth.currentUser;
+    if (user == null) throw Exception("User not logged in");
+    await _db.runTransaction((transaction) async {
+      final walletRef = _db
+          .collection('users')
+          .doc(user.uid)
+          .collection('wallets')
+          .doc(wallet.id);
+
+      transaction.update(walletRef, {'balance': FieldValue.increment(amount)});
+    });
   }
 }
