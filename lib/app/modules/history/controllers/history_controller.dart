@@ -13,16 +13,6 @@ class HistoryController extends GetxController {
     initializeData();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
-
   Future<void> initializeData() async {
     try {
       isLoading.value = true;
@@ -42,5 +32,15 @@ class HistoryController extends GetxController {
     transactions.value = (await TransactionService.get())
         .map((transaction) => TransactionModel.fromJson(transaction))
         .toList();
+  }
+
+  bool checkSameDay({DateTime? prev, DateTime? curr, required int index}) {
+    if (index != 0 &&
+        prev?.year == curr?.year &&
+        prev?.month == curr?.month &&
+        prev?.day == curr?.day) {
+      return true;
+    }
+    return false;
   }
 }
