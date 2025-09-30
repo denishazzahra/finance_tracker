@@ -11,8 +11,19 @@ class CustomConverter {
     return formatter.format(num);
   }
 
-  static String datetimeToDisplay(DateTime datetime) {
-    final DateFormat formatter = DateFormat("E, d MMMM y 'at' h.mm a");
+  static String datetimeToDisplay(DateTime? datetime) {
+    if (datetime == null) {
+      return '-';
+    }
+    final DateFormat formatter = DateFormat("E, MMMM d, y 'at' h.mm a");
+    return formatter.format(datetime);
+  }
+
+  static String dateToDisplay(DateTime? datetime) {
+    if (datetime == null) {
+      return '-';
+    }
+    final DateFormat formatter = DateFormat("EEEE, MMMM d, y");
     return formatter.format(datetime);
   }
 }

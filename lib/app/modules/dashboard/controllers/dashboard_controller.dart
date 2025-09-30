@@ -24,11 +24,11 @@ class DashboardController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    initializeData();
     walletName = TextEditingController();
     amount = TextEditingController();
     adminFee = TextEditingController();
     desc = TextEditingController();
+    initializeData();
   }
 
   @override

@@ -1,6 +1,10 @@
 # Miscellaneous
 .env
 lib/firebase_options.dart
+firebase.json
+firestore.indexes.json
+firestore.rules
+.firebaserc
 *.class
 *.log
 *.pyc
