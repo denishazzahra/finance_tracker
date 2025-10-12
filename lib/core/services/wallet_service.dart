@@ -64,46 +64,64 @@ class WalletService {
         .doc(user.uid)
         .collection('wallets')
         .doc(transfer.from.id);
-
     final toRef = _db
         .collection('users')
         .doc(user.uid)
         .collection('wallets')
         .doc(transfer.to.id);
 
-    await _db.runTransaction((transaction) async {
-      final fromSnap = await transaction.get(fromRef);
-      final toSnap = await transaction.get(toRef);
+    try {
+      await _db
+          .runTransaction<String>((transaction) async {
+            final fromSnap = await transaction.get(fromRef);
+            final toSnap = await transaction.get(toRef);
 
-      if (!fromSnap.exists || !toSnap.exists) {
-        throw Exception("Wallet not found");
-      }
+            if (!fromSnap.exists || !toSnap.exists) {
+              return "Wallet not found"; // return error string
+            }
 
-      final fromBalance = (fromSnap['balance'] as num).toDouble();
-      final totalDeduction = transfer.amount + transfer.adminFee;
+            final fromBalance = (fromSnap['balance'] as num?)?.toDouble() ?? 0;
+            final totalDeduction = transfer.amount + transfer.adminFee;
 
-      if (fromBalance < totalDeduction) {
-        throw Exception("Not enough balance in source wallet");
-      }
+            if (fromBalance < totalDeduction) {
+              return "Not enough balance in source wallet"; // return error string
+            }
 
-      // Update both atomically
-      transaction.update(fromRef, {
-        'balance': FieldValue.increment(-totalDeduction),
-      });
+            // Update both atomically
+            transaction.update(fromRef, {
+              'balance': FieldValue.increment(-totalDeduction),
+            });
+            transaction.update(toRef, {
+              'balance': FieldValue.increment(transfer.amount),
+            });
 
-      transaction.update(toRef, {
-        'balance': FieldValue.increment(transfer.amount),
-      });
-    });
+            return "success"; // indicate success
+          })
+          .then((result) async {
+            if (result != "success") {
+              throw Exception(
+                result,
+              ); // now we throw outside of the transaction
+            }
 
-    await TransactionService.create(
-      TransactionModel.fromTransfer(transfer),
-      isTopup: true,
-    );
-    await TransactionService.create(
-      TransactionModel.fromTransfer(transfer, isFrom: false),
-      isTopup: true,
-    );
+            // Only create transaction records if the Firestore transaction succeeded
+            String fromId = await TransactionService.create(
+              TransactionModel.fromTransfer(transfer),
+              isTopup: true,
+            );
+            await TransactionService.create(
+              TransactionModel.fromTransfer(
+                transfer,
+                isFrom: false,
+                id: fromId,
+              ),
+              isTopup: true,
+            );
+          });
+    } catch (e) {
+      // Now the actual message is preserved
+      throw Exception(e.toString().replaceFirst("Exception: ", ""));
+    }
   }
 
   static Future<void> updateBalance({

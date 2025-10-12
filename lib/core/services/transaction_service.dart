@@ -8,7 +8,7 @@ class TransactionService {
   static final FirebaseAuth _auth = FirebaseAuth.instance;
   static final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  static Future<void> create(
+  static Future<String> create(
     TransactionModel transaction, {
     bool isTopup = false,
   }) async {
@@ -20,11 +20,13 @@ class TransactionService {
         amount: transaction.toJson()['amount'],
       );
     }
-    await _db
+    final snapshot = await _db
         .collection('users')
         .doc(user.uid)
         .collection('transactions')
         .add(transaction.toJson());
+
+    return snapshot.id;
   }
 
   static Future<List<Map<String, dynamic>>> get() async {
@@ -41,5 +43,23 @@ class TransactionService {
       final data = doc.data();
       return {'id': doc.id, ...data};
     }).toList();
+  }
+
+  static Future<void> delete(
+    TransactionModel transaction, {
+    bool resetBalance = true,
+  }) async {
+    final user = _auth.currentUser;
+    if (user == null) throw Exception("User not logged in");
+    await _db
+        .collection('users')
+        .doc(user.uid)
+        .collection('transactions')
+        .doc(transaction.id)
+        .delete();
+    await WalletService.updateBalance(
+      wallet: transaction.wallet!,
+      amount: -transaction.amount!,
+    );
   }
 }
