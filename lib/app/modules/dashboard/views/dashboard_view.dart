@@ -14,6 +14,7 @@ class DashboardView extends GetView<DashboardController> {
   const DashboardView({super.key});
   @override
   Widget build(BuildContext context) {
+    controller.initializeData();
     return Scaffold(
       floatingActionButton: Obx(
         () => Column(

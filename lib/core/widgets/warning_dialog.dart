@@ -9,6 +9,8 @@ class WarningDialog {
     required String title,
     required String content,
     required String confirmText,
+    RxBool? checkBox,
+    String? checkBoxLabel,
     bool isDanger = false,
   }) async {
     bool isLight = Get.theme.brightness == Brightness.light;
@@ -21,7 +23,38 @@ class WarningDialog {
           context: context,
         ),
         titlePadding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-        content: CustomText.normal(content, context: context),
+        content: Column(
+          spacing: 12,
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CustomText.normal(content, context: context),
+            if (checkBox != null)
+              Row(
+                children: [
+                  Obx(
+                    () => Checkbox(
+                      value: checkBox.value,
+                      onChanged: (val) {
+                        if (val != null) {
+                          checkBox.value = val;
+                        }
+                      },
+                    ),
+                  ),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () => checkBox.toggle(),
+                      child: CustomText.small(
+                        checkBoxLabel ?? '',
+                        context: context,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+          ],
+        ),
         contentPadding: const EdgeInsets.all(20),
         actions: [
           CustomButton.text(
