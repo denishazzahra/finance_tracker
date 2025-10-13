@@ -57,9 +57,11 @@ class TransactionService {
         .collection('transactions')
         .doc(transaction.id)
         .delete();
-    await WalletService.updateBalance(
-      wallet: transaction.wallet!,
-      amount: -transaction.amount!,
-    );
+    if (resetBalance) {
+      await WalletService.updateBalance(
+        wallet: transaction.wallet!,
+        amount: -transaction.amount!,
+      );
+    }
   }
 }

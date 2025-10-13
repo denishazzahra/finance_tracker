@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app/routes/app_pages.dart';
+import 'core/controllers/network_controller.dart';
 import 'core/theme/custom_theme.dart';
 import 'core/theme/theme_service.dart';
 import 'firebase_options.dart';
@@ -17,6 +18,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   Get.put<FirebaseApp>(firebase, permanent: true);
+  Get.put<NetworkController>(NetworkController(), permanent: true);
   final prefs = await SharedPreferences.getInstance();
   Get.put<SharedPreferences>(prefs, permanent: true);
   runApp(

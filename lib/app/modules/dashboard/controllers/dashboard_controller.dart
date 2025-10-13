@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:finance_tracker/core/controllers/network_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,6 +13,7 @@ import '../../../data/models/transfer_model.dart';
 import '../../../data/models/wallet_model.dart';
 
 class DashboardController extends GetxController {
+  final network = Get.find<NetworkController>();
   RxBool isMenuExpanded = false.obs;
   RxBool isLoading = true.obs;
   RxDouble totalBalance = 0.0.obs;
@@ -25,6 +27,7 @@ class DashboardController extends GetxController {
   Rx<WalletModel?> toWallet = Rx<WalletModel?>(null);
   Rx<WalletModel?> selectedWallet = Rx<WalletModel?>(null);
   SharedPreferences prefs = Get.find<SharedPreferences>();
+  RxBool hasInit = false.obs;
 
   @override
   void onInit() {
@@ -33,7 +36,7 @@ class DashboardController extends GetxController {
     amount = TextEditingController();
     adminFee = TextEditingController();
     desc = TextEditingController();
-    // initializeData();
+    initializeData();
   }
 
   @override
@@ -208,7 +211,6 @@ class DashboardController extends GetxController {
         await getAllWallets();
       }
     } on Exception catch (e) {
-      print(e.toString());
       Get.snackbar(
         'Failed',
         e.toString().replaceFirst('Exception: ', ''),
@@ -275,7 +277,7 @@ class DashboardController extends GetxController {
     } catch (e) {
       Get.snackbar(
         'Failed',
-        "Failed to delete wallet: ${e.toString()}",
+        "Failed to delete wallet: ${e.toString().replaceFirst('Exception: ', '')}",
         margin: EdgeInsets.all(16),
       );
     } finally {
@@ -288,10 +290,15 @@ class DashboardController extends GetxController {
       'wallets',
       jsonEncode(wallets.map((e) => e.toJson(isArchive: true)).toList()),
     );
+    await prefs.setString('lastUpdated', lastUpdated.value.toIso8601String());
   }
 
   void getWalletCache() {
     String? temp = prefs.getString('wallets');
+    String? lastUpdatedString = prefs.getString('lastUpdated');
+    if (lastUpdatedString != null) {
+      lastUpdated.value = DateTime.parse(lastUpdatedString);
+    }
     totalBalance.value = 0;
     if (temp != null) {
       List<dynamic> json = jsonDecode(temp);
@@ -310,18 +317,31 @@ class DashboardController extends GetxController {
 
   Future<void> getAllWallets() async {
     try {
-      totalBalance.value = 0;
-      wallets.value = (await WalletService.get()).map((wallet) {
-        WalletModel temp = WalletModel.fromJson(wallet);
-        totalBalance.value += (temp.balance ?? 0);
-        return temp;
-      }).toList();
-      lastUpdated.value = DateTime.now();
+      if (await network.ensureConnection()) {
+        if (hasInit.value) {
+          Get.snackbar(
+            "You're back online",
+            "Loading data from database...",
+            margin: EdgeInsets.all(16),
+          );
+        }
+        hasInit.value = false;
+        totalBalance.value = 0;
+        wallets.value = (await WalletService.get()).map((wallet) {
+          WalletModel temp = WalletModel.fromJson(wallet);
+          totalBalance.value += (temp.balance ?? 0);
+          return temp;
+        }).toList();
+        lastUpdated.value = DateTime.now();
+        setWalletCache();
+      } else {
+        hasInit.value = true;
+        getWalletCache();
+      }
     } on FirebaseException catch (e) {
-      getWalletCache();
       Get.snackbar(
         'Failed',
-        "Failed to fetch data: ${e.toString()}",
+        "Failed to fetch data: ${e.toString().replaceFirst('Exception: ', '')}",
         margin: EdgeInsets.all(16),
       );
     }

@@ -1,3 +1,5 @@
+import 'package:finance_tracker/core/controllers/network_controller.dart'
+    show NetworkController;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
@@ -9,6 +11,8 @@ class LoginController extends GetxController {
   late final TextEditingController password;
   RxBool isObscure = true.obs;
   RxBool isLoading = false.obs;
+  RxBool isLoadingGoogle = false.obs;
+  NetworkController network = Get.find<NetworkController>();
 
   @override
   void onInit() {
@@ -25,18 +29,20 @@ class LoginController extends GetxController {
   }
 
   Future<void> login() async {
-    isLoading.value = true;
     try {
-      final User? user = await AuthService.loginWithEmailAndPassword(
-        email: email.text.trim(),
-        password: password.text,
-      );
-      Get.offAllNamed('/home'); // navigate on success
-      Get.snackbar(
-        'Login success',
-        "Welcome, ${user?.displayName ?? "new user!"}",
-        margin: EdgeInsets.all(16),
-      );
+      if (await network.ensureConnection()) {
+        isLoading.value = true;
+        final User? user = await AuthService.loginWithEmailAndPassword(
+          email: email.text.trim(),
+          password: password.text,
+        );
+        Get.offAllNamed('/home'); // navigate on success
+        Get.snackbar(
+          'Login success',
+          "Welcome, ${user?.displayName ?? "new user!"}",
+          margin: EdgeInsets.all(16),
+        );
+      }
     } on FirebaseAuthException catch (e) {
       Get.snackbar(
         'Login failed',
@@ -50,14 +56,16 @@ class LoginController extends GetxController {
 
   Future<void> loginWithGoogle() async {
     try {
-      isLoading.value = true;
-      User? user = await AuthService.loginWithGoogle();
-      Get.offAllNamed('/home'); // navigate on success
-      Get.snackbar(
-        'Login success',
-        "Welcome, ${user?.displayName ?? "new user!"}",
-        margin: EdgeInsets.all(16),
-      );
+      if (await network.ensureConnection()) {
+        isLoadingGoogle.value = true;
+        User? user = await AuthService.loginWithGoogle();
+        Get.offAllNamed('/home'); // navigate on success
+        Get.snackbar(
+          'Login success',
+          "Welcome, ${user?.displayName ?? "new user!"}",
+          margin: EdgeInsets.all(16),
+        );
+      }
     } on FirebaseAuthException catch (e) {
       Get.snackbar(
         'Login failed',
@@ -65,7 +73,7 @@ class LoginController extends GetxController {
         margin: EdgeInsets.all(16),
       );
     } finally {
-      isLoading.value = false;
+      isLoadingGoogle.value = false;
     }
   }
 }

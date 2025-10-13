@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
+import '../../../../core/controllers/network_controller.dart';
 import '../../../../core/services/auth_service.dart';
 
 class SignUpController extends GetxController {
@@ -12,6 +13,7 @@ class SignUpController extends GetxController {
   RxBool isObscurePass = true.obs;
   RxBool isObscureConfirmPass = true.obs;
   RxBool isLoading = false.obs;
+  NetworkController network = Get.find<NetworkController>();
 
   @override
   void onInit() {
@@ -33,26 +35,36 @@ class SignUpController extends GetxController {
 
   Future<void> signUpWithEmailAndPassword() async {
     try {
-      isLoading.value = true;
-      if (password.text != confirmPassword.text) {
+      if (await network.ensureConnection()) {
+        isLoading.value = true;
+        if (email.text.trim().isEmpty || fullName.text.trim().isEmpty) {
+          Get.snackbar(
+            'All fields are required',
+            'Please fill in all the fields before continuing.',
+            margin: EdgeInsets.all(16),
+          );
+          return;
+        }
+        if (password.text != confirmPassword.text) {
+          Get.snackbar(
+            'Password is not identical',
+            'Please re-enter your password.',
+            margin: EdgeInsets.all(16),
+          );
+          return;
+        }
+        await AuthService.signUpWithEmailAndPassword(
+          email: email.text.trim(),
+          password: password.text,
+          displayName: fullName.text.trim(),
+        );
+        Get.back(); // navigate on success
         Get.snackbar(
-          'Password is not identical',
-          'Please re-enter your password.',
+          'Sign up success',
+          "Please login to continue.",
           margin: EdgeInsets.all(16),
         );
-        return;
       }
-      await AuthService.signUpWithEmailAndPassword(
-        email: email.text.trim(),
-        password: password.text,
-        displayName: fullName.text.trim(),
-      );
-      Get.back(); // navigate on success
-      Get.snackbar(
-        'Sign up success',
-        "Please login to continue.",
-        margin: EdgeInsets.all(16),
-      );
     } on FirebaseAuthException catch (e) {
       String message = '';
       if (e.code == 'weak-password') {
