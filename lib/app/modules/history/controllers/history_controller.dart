@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:finance_tracker/core/controllers/network_controller.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -13,11 +14,13 @@ class HistoryController extends GetxController {
   RxList<TransactionModel> transactions = <TransactionModel>[].obs;
   RxBool resetBalance = true.obs;
   SharedPreferences prefs = Get.find<SharedPreferences>();
+  NetworkController network = Get.find<NetworkController>();
+  RxBool hasInit = false.obs;
 
   @override
   void onInit() {
     super.onInit();
-    // initializeData();
+    initializeData();
   }
 
   Future<void> initializeData() async {
@@ -52,15 +55,26 @@ class HistoryController extends GetxController {
 
   Future<void> getAllTransactions() async {
     try {
-      transactions.value = (await TransactionService.get())
-          .map((transaction) => TransactionModel.fromJson(transaction))
-          .toList();
-      await setTransactionCache();
+      if (await network.ensureConnection()) {
+        if (hasInit.value) {
+          Get.snackbar(
+            "You're back online",
+            "Loading data from database...",
+            margin: EdgeInsets.all(16),
+          );
+        }
+        transactions.value = (await TransactionService.get())
+            .map((transaction) => TransactionModel.fromJson(transaction))
+            .toList();
+        await setTransactionCache();
+      } else {
+        hasInit.value = true;
+        getTransactionCache();
+      }
     } catch (e) {
-      getTransactionCache();
       Get.snackbar(
         'Failed',
-        "Failed to fetch data: ${e.toString()}",
+        "Failed to fetch data: ${e.toString().replaceFirst('Exception: ', '')}",
         margin: EdgeInsets.all(16),
       );
     }
@@ -98,7 +112,7 @@ class HistoryController extends GetxController {
     } on FirebaseException catch (e) {
       Get.snackbar(
         'Failed',
-        "Failed to delete transaction: ${e.message}",
+        "Failed to delete transaction: ${e.toString().replaceFirst('Exception: ', '')}",
         margin: EdgeInsets.all(16),
       );
     }

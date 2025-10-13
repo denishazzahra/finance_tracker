@@ -11,7 +11,7 @@ class HistoryView extends GetView<HistoryController> {
   const HistoryView({super.key});
   @override
   Widget build(BuildContext context) {
-    controller.initializeData();
+    // controller.initializeData();
     return LayoutBuilder(
       builder: (context, constraint) {
         double maxHeight = constraint.maxHeight;

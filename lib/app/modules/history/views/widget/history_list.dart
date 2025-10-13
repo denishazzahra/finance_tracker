@@ -27,7 +27,6 @@ class HistoryList extends StatelessWidget {
     bool isLight = Theme.of(context).brightness == Brightness.light;
     Color? chipCol = Theme.of(context).chipTheme.backgroundColor;
     Color? onSurface = Theme.of(context).colorScheme.onSurface;
-    Color? onSafe = Theme.of(context).extension<FinanceColors>()?.onEwallet;
     Color? onDanger = Theme.of(context).extension<FinanceColors>()?.onExpense;
 
     return ListView.separated(
@@ -63,6 +62,7 @@ class HistoryList extends StatelessWidget {
             ],
             Dismissible(
               key: UniqueKey(),
+              direction: DismissDirection.startToEnd,
               background: Padding(
                 padding: EdgeInsets.only(left: 16),
                 child: Align(
@@ -70,28 +70,16 @@ class HistoryList extends StatelessWidget {
                   child: Icon(Symbols.delete, color: onDanger),
                 ),
               ),
-              secondaryBackground: Padding(
-                padding: EdgeInsets.only(right: 16),
-                child: Align(
-                  alignment: AlignmentGeometry.centerRight,
-                  child: Icon(Symbols.edit, color: onSafe),
-                ),
-              ),
               confirmDismiss: (direction) async {
-                if (direction == DismissDirection.startToEnd) {
-                  return await WarningDialog.showConfirmDialog(
-                    title: "Delete Transaction",
-                    confirmText: "Delete",
-                    context: context,
-                    content:
-                        "Are you sure you want to delete this transaction?",
-                    isDanger: true,
-                    checkBox: resetBalance,
-                    checkBoxLabel: "Apply change to wallet balance",
-                  );
-                } else {
-                  return false;
-                }
+                return await WarningDialog.showConfirmDialog(
+                  title: "Delete Transaction",
+                  confirmText: "Delete",
+                  context: context,
+                  content: "Are you sure you want to delete this transaction?",
+                  isDanger: true,
+                  checkBox: resetBalance,
+                  checkBoxLabel: "Apply change to wallet balance",
+                );
               },
               onDismissed: (direction) => onDelete(currTransaction),
               child: Row(
