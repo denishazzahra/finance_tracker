@@ -69,7 +69,7 @@ class HistoryController extends GetxController {
       if (isCacheExists()) {
         getTransactionCache(date: tempDate);
       } else {
-        getAllTransactions();
+        await getAllTransactions();
       }
     } catch (e) {
       Get.snackbar(
@@ -113,7 +113,7 @@ class HistoryController extends GetxController {
     try {
       String id = selectedTrans.id!;
       transactions.remove(selectedTrans);
-
+      DateTime tempDate = CustomConverter.nMonthDiff(monthDiff.value);
       // also delete the linked transaction (ex: topup or transfer money)
       if (selectedTrans.isLinked ?? false) {
         TransactionModel? linkedTrans;
@@ -137,7 +137,7 @@ class HistoryController extends GetxController {
         resetBalance: resetBalance.value,
       );
 
-      await setTransactionCache();
+      await setTransactionCache(date: tempDate);
     } on FirebaseException catch (e) {
       Get.snackbar(
         'Failed',

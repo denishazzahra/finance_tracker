@@ -75,6 +75,8 @@ class AuthService {
   static DateTime getCreationTime() {
     final user = _auth.currentUser;
     if (user == null) throw Exception("User not logged in");
-    return user.metadata.creationTime!;
+    final temp = user.metadata.creationTime!;
+    DateTime date = DateTime(temp.year, temp.month);
+    return date;
   }
 }

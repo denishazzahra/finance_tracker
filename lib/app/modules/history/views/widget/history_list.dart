@@ -41,9 +41,13 @@ class HistoryList extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Visibility(
-              visible: CustomConverter.nMonthDiff(
-                monthDiff - 1,
-              ).isAfter(AuthService.getCreationTime()),
+              visible:
+                  CustomConverter.nMonthDiff(
+                    monthDiff - 1,
+                  ).isAfter(AuthService.getCreationTime()) ||
+                  CustomConverter.nMonthDiff(
+                    monthDiff - 1,
+                  ).isAtSameMomentAs(AuthService.getCreationTime()),
               maintainSize: true,
               maintainAnimation: true,
               maintainState: true,
@@ -103,7 +107,8 @@ class HistoryList extends StatelessWidget {
                             ? null
                             : transactions[index - 1];
                         IconData icon =
-                            transactionCategoryMap[currTransaction.category];
+                            transactionCategoryMap[currTransaction
+                                .category]!['icon'];
                         Color bgCol = transactionTypeMap(
                           context,
                         )[currTransaction.type]?['bgCol'];
@@ -168,7 +173,7 @@ class HistoryList extends StatelessWidget {
                                       ),
                                     ),
                                     child: Center(
-                                      child: Icon(icon, color: fgCol, size: 20),
+                                      child: Icon(icon, color: fgCol, size: 24),
                                     ),
                                   ),
                                   Expanded(

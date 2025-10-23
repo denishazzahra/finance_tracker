@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/services/auth_service.dart';
 import '../../../../core/theme/theme_service.dart';
@@ -17,6 +17,7 @@ class HomeController extends GetxController {
   ];
   RxInt currentIndex = 0.obs;
   RxString currentThemeMode = 'Dark'.obs;
+  SharedPreferences prefs = Get.find<SharedPreferences>();
 
   String getCurrentTheme() => ThemeService().name;
 
@@ -37,20 +38,9 @@ class HomeController extends GetxController {
     currentIndex.value = index;
   }
 
-  void confirmLogout() async {
-    try {
-      await AuthService.logout();
-    } catch (e) {
-      Get.snackbar(
-        'Logout failed',
-        'Please try again later.',
-        margin: EdgeInsets.all(16),
-      );
-    }
-  }
-
   void logout() async {
     await AuthService.logout();
-    Get.offNamed('/login');
+    await prefs.clear();
+    Get.offAllNamed('/login');
   }
 }
