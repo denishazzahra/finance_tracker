@@ -67,7 +67,7 @@ class TransactionModel {
     return TransactionModel(
       id: json['id'],
       wallet: WalletModel.fromJson(json['wallet'], isArchive: isArchive),
-      amount: json['amount'],
+      amount: json['amount'].toDouble(),
       type: json['type'],
       category: json['category'],
       desc: json['desc'],

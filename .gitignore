@@ -1,4 +1,8 @@
 # Miscellaneous
+android/key.properties
+android/app/upload-keystore.jks
+google-services.json
+GoogleService-Info.plist
 .env
 lib/firebase_options.dart
 firebase.json
