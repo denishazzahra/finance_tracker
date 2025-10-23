@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:finance_tracker/app/data/models/transaction_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../utils/custom_converter.dart';
 import 'wallet_service.dart';
 
 class TransactionService {
@@ -29,16 +30,25 @@ class TransactionService {
     return snapshot.id;
   }
 
-  static Future<List<Map<String, dynamic>>> get() async {
+  static Future<List<Map<String, dynamic>>> get({int monthDiff = 0}) async {
+    final bottomLimit = CustomConverter.nMonthDiff(monthDiff);
+    int upperLimitMonth = bottomLimit.month + 1;
+    if (upperLimitMonth == 13) upperLimitMonth = 1;
+    final upperLimitYear = bottomLimit.year + (upperLimitMonth == 1 ? 1 : 0);
+    final upperLimit = DateTime(upperLimitYear, upperLimitMonth);
     final user = _auth.currentUser;
     if (user == null) throw Exception("User not logged in");
     final snapshot = await _db
         .collection('users')
         .doc(user.uid)
         .collection('transactions')
+        .where(
+          'dateTime',
+          isGreaterThanOrEqualTo: bottomLimit,
+          isLessThan: upperLimit,
+        )
         .orderBy('dateTime', descending: true)
         .get();
-
     return snapshot.docs.map((doc) {
       final data = doc.data();
       return {'id': doc.id, ...data};

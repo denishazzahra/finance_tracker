@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/services/transaction_service.dart';
+import '../../../../core/utils/custom_converter.dart';
 import '../../../data/models/transaction_model.dart';
 
 class HistoryController extends GetxController {
@@ -16,6 +17,7 @@ class HistoryController extends GetxController {
   SharedPreferences prefs = Get.find<SharedPreferences>();
   NetworkController network = Get.find<NetworkController>();
   RxBool hasInit = false.obs;
+  RxInt monthDiff = 0.obs;
 
   @override
   void onInit() {
@@ -29,15 +31,22 @@ class HistoryController extends GetxController {
     isLoading.value = false;
   }
 
-  Future<void> setTransactionCache() async {
+  Future<void> setTransactionCache({DateTime? date}) async {
+    date = date ?? DateTime.now();
     await prefs.setString(
-      'transactions',
+      'transactions_${date.year}-${date.month}',
       jsonEncode(transactions.map((e) => e.toJson(isArchive: true)).toList()),
     );
   }
 
-  void getTransactionCache() {
-    String? temp = prefs.getString('transactions');
+  bool isCacheExists({DateTime? date}) {
+    date = date ?? DateTime.now();
+    return prefs.getString('transactions_${date.year}-${date.month}') != null;
+  }
+
+  void getTransactionCache({DateTime? date}) {
+    date = date ?? DateTime.now();
+    String? temp = prefs.getString('transactions_${date.year}-${date.month}');
     if (temp != null) {
       List<dynamic> json = jsonDecode(temp);
       transactions.value = json
@@ -53,8 +62,27 @@ class HistoryController extends GetxController {
     }
   }
 
+  Future<void> changeMonth(int diff) async {
+    try {
+      monthDiff.value += diff;
+      final tempDate = CustomConverter.nMonthDiff(monthDiff.value);
+      if (isCacheExists()) {
+        getTransactionCache(date: tempDate);
+      } else {
+        getAllTransactions();
+      }
+    } catch (e) {
+      Get.snackbar(
+        'Failed',
+        "Failed to fetch data: ${e.toString().replaceFirst('Exception: ', '')}",
+        margin: EdgeInsets.all(16),
+      );
+    }
+  }
+
   Future<void> getAllTransactions() async {
     try {
+      DateTime tempDate = CustomConverter.nMonthDiff(monthDiff.value);
       if (await network.ensureConnection()) {
         if (hasInit.value) {
           Get.snackbar(
@@ -63,13 +91,14 @@ class HistoryController extends GetxController {
             margin: EdgeInsets.all(16),
           );
         }
-        transactions.value = (await TransactionService.get())
-            .map((transaction) => TransactionModel.fromJson(transaction))
-            .toList();
-        await setTransactionCache();
+        transactions.value =
+            (await TransactionService.get(monthDiff: monthDiff.value))
+                .map((transaction) => TransactionModel.fromJson(transaction))
+                .toList();
+        await setTransactionCache(date: tempDate);
       } else {
         hasInit.value = true;
-        getTransactionCache();
+        getTransactionCache(date: tempDate);
       }
     } catch (e) {
       Get.snackbar(
