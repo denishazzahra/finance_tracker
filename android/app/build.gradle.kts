@@ -40,6 +40,23 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
+
+    splits {
+        abi {
+            // Enables building multiple APKs per ABI
+            isEnable = true
+
+            // Resets the list of ABIs that Gradle should create APKs for
+            reset()
+
+            // Specifies a list of ABIs that Gradle should create APKs for
+            include("x86", "x86_64", "armeabi-v7a", "arm64-v8a")
+
+            // Specifies whether to also generate a universal APK that includes all ABIs
+            isUniversalApk = true
+        }
+    }
+
 }
 
 flutter {
