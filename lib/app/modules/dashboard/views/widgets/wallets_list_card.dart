@@ -101,7 +101,7 @@ class WalletsListCard extends StatelessWidget {
                                     color: walletTypeMap(
                                       context,
                                     )[controller.wallets[index].type]?['fgCol'],
-                                    size: 20,
+                                    size: 24,
                                   ),
                                 ),
                               ),
