@@ -41,11 +41,11 @@ class DashboardController extends GetxController {
 
   @override
   void onClose() {
-    super.onClose();
     walletName.dispose();
     amount.dispose();
     adminFee.dispose();
     desc.dispose();
+    super.onClose();
   }
 
   Future<void> initializeData() async {

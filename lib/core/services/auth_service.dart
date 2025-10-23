@@ -71,4 +71,10 @@ class AuthService {
   static Future<void> logout() async {
     await _auth.signOut();
   }
+
+  static DateTime getCreationTime() {
+    final user = _auth.currentUser;
+    if (user == null) throw Exception("User not logged in");
+    return user.metadata.creationTime!;
+  }
 }
