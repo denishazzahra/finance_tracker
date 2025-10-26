@@ -66,7 +66,7 @@ class HistoryController extends GetxController {
     try {
       monthDiff.value += diff;
       final tempDate = CustomConverter.nMonthDiff(monthDiff.value);
-      if (isCacheExists()) {
+      if (isCacheExists(date: tempDate)) {
         getTransactionCache(date: tempDate);
       } else {
         await getAllTransactions();

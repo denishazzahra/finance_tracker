@@ -68,7 +68,7 @@ class InsightController extends GetxController
     try {
       monthDiff.value += diff;
       date.value = CustomConverter.nMonthDiff(monthDiff.value);
-      if (isCacheExists()) {
+      if (isCacheExists(date: date.value)) {
         getTransactionCache(date: date.value);
       } else {
         await getAllTransactions();
