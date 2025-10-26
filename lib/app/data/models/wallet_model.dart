@@ -49,18 +49,20 @@ class WalletModel {
       'name': name,
       if (balance != null) 'balance': balance,
       'type': type,
-      'createdAt': !isEdit && !isArchive
-          ? FieldValue.serverTimestamp()
-          : isArchive
-          ? createdAt?.toIso8601String()
-          : createdAt,
-      'updatedAt': isArchive
-          ? updatedAt?.toIso8601String()
-          : FieldValue.serverTimestamp(),
+      if (createdAt != null)
+        'createdAt': !isEdit && !isArchive
+            ? FieldValue.serverTimestamp()
+            : isArchive
+            ? createdAt?.toIso8601String()
+            : createdAt,
+      if (updatedAt != null)
+        'updatedAt': isArchive
+            ? updatedAt?.toIso8601String()
+            : FieldValue.serverTimestamp(),
     };
   }
 
   WalletModel removeBalance() {
-    return WalletModel(id: id, balance: null, type: type);
+    return WalletModel(id: id, name: name, balance: null, type: type);
   }
 }

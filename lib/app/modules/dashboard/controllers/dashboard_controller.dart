@@ -26,6 +26,8 @@ class DashboardController extends GetxController {
   Rx<WalletModel?> fromWallet = Rx<WalletModel?>(null);
   Rx<WalletModel?> toWallet = Rx<WalletModel?>(null);
   Rx<WalletModel?> selectedWallet = Rx<WalletModel?>(null);
+  Rx<AdminFeeOn> adminFeeOn = AdminFeeOn.sender.obs;
+  RxString adminFeeStr = ''.obs;
   SharedPreferences prefs = Get.find<SharedPreferences>();
   RxBool hasInit = false.obs;
 
@@ -69,6 +71,8 @@ class DashboardController extends GetxController {
     toWallet.value = null;
     transactionCategory.value = null;
     desc.clear();
+    adminFeeOn.value = AdminFeeOn.sender;
+    adminFeeStr.value = '';
   }
 
   void onChangeType(String val) {
@@ -91,6 +95,14 @@ class DashboardController extends GetxController {
 
   void onChangeTo(WalletModel val) {
     toWallet.value = val;
+  }
+
+  void onChangeAdminFeeOn(AdminFeeOn val) {
+    adminFeeOn.value = val;
+  }
+
+  void trimAdminFee(String val) {
+    adminFeeStr.value = val.trim().replaceAll(RegExp(r'[^0-9]'), '');
   }
 
   Future<void> createNewWallet() async {
@@ -199,6 +211,7 @@ class DashboardController extends GetxController {
                 adminFee.text.trim().replaceAll(RegExp(r'[^0-9]'), ''),
               ) ??
               0,
+          adminFeeOn: adminFeeOn.value,
         );
         await WalletService.transfer(transfer: transfer);
         Get.back();

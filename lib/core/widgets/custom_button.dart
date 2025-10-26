@@ -22,7 +22,7 @@ class CustomButton {
         backgroundColor: Theme.of(context).primaryColor,
         foregroundColor: Theme.of(context).colorScheme.onPrimary,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       ),
       child: icon == null
           ? CustomText.normal(
@@ -68,7 +68,7 @@ class CustomButton {
           context,
         ).extension<FinanceColors>()?.onExpense,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       ),
       child: CustomText.normal(
         text,
@@ -95,7 +95,7 @@ class CustomButton {
         backgroundColor: Colors.transparent,
         foregroundColor: color ?? Theme.of(context).colorScheme.onSurface,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       ),
       child: CustomText.normal(
         text,
@@ -121,7 +121,7 @@ class CustomButton {
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,

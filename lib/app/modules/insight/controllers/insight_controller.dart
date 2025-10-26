@@ -17,6 +17,7 @@ class InsightController extends GetxController
   NetworkController network = Get.find<NetworkController>();
   RxBool hasInit = false.obs;
   RxInt monthDiff = 0.obs;
+  Rx<DateTime> date = DateTime.now().obs;
   late final TabController tabController;
 
   @override
@@ -66,9 +67,9 @@ class InsightController extends GetxController
   Future<void> changeMonth(int diff) async {
     try {
       monthDiff.value += diff;
-      final tempDate = CustomConverter.nMonthDiff(monthDiff.value);
+      date.value = CustomConverter.nMonthDiff(monthDiff.value);
       if (isCacheExists()) {
-        getTransactionCache(date: tempDate);
+        getTransactionCache(date: date.value);
       } else {
         await getAllTransactions();
       }
@@ -83,7 +84,6 @@ class InsightController extends GetxController
 
   Future<void> getAllTransactions() async {
     try {
-      DateTime tempDate = CustomConverter.nMonthDiff(monthDiff.value);
       if (await network.ensureConnection()) {
         if (hasInit.value) {
           Get.snackbar(
@@ -96,10 +96,10 @@ class InsightController extends GetxController
             (await TransactionService.get(monthDiff: monthDiff.value))
                 .map((transaction) => TransactionModel.fromJson(transaction))
                 .toList();
-        await setTransactionCache(date: tempDate);
+        await setTransactionCache(date: date.value);
       } else {
         hasInit.value = true;
-        getTransactionCache(date: tempDate);
+        getTransactionCache(date: date.value);
       }
     } catch (e) {
       Get.snackbar(

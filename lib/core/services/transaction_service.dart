@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:finance_tracker/app/data/models/transaction_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../../app/data/models/transfer_model.dart';
 import '../utils/custom_converter.dart';
 import 'wallet_service.dart';
 
@@ -25,7 +26,11 @@ class TransactionService {
         .collection('users')
         .doc(user.uid)
         .collection('transactions')
-        .add(transaction.toJson());
+        .add(
+          transaction.transfer == null
+              ? transaction.toJson()
+              : transaction.toJsonFromTransfer(),
+        );
 
     return snapshot.id;
   }
@@ -68,10 +73,30 @@ class TransactionService {
         .doc(transaction.id)
         .delete();
     if (resetBalance) {
-      await WalletService.updateBalance(
-        wallet: transaction.wallet!,
-        amount: -transaction.amount!,
-      );
+      if (transaction.transfer != null) {
+        final TransferModel transfer = transaction.transfer!;
+        final double amountFrom =
+            transfer.amount +
+            (transfer.adminFeeOn == AdminFeeOn.sender ? 1 : 0) *
+                transfer.adminFee;
+        final double amountTo =
+            transfer.amount -
+            (transfer.adminFeeOn == AdminFeeOn.recipient ? 1 : 0) *
+                transfer.adminFee;
+        await WalletService.updateBalance(
+          wallet: transfer.from,
+          amount: amountFrom,
+        );
+        await WalletService.updateBalance(
+          wallet: transfer.to,
+          amount: -amountTo,
+        );
+      } else {
+        await WalletService.updateBalance(
+          wallet: transaction.wallet!,
+          amount: -transaction.amount!,
+        );
+      }
     }
   }
 }
