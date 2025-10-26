@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class CustomColor {
   static final Color backgroundLight = Colors.white;
   static final Color primaryLight = Colors.orange.shade300;
-  static final Color cardLight = Color(0xFFf0f0f0);
+  static final Color cardLight = Color(0xFFfafafa);
   static final Color chipLight = Color(0xFFdfdfdf);
   static final Color onPrimaryLight = Color(0xFF121212);
   static final Color onBackgroundLight = Color(0xFF030507);

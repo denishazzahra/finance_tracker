@@ -9,6 +9,7 @@ import '../../../../../core/widgets/custom_dropdown.dart';
 import '../../../../../core/widgets/custom_text.dart';
 import '../../../../../core/widgets/custom_text_field.dart';
 import '../../../../../core/widgets/warning_dialog.dart' show WarningDialog;
+import '../../../../data/models/transfer_model.dart';
 import '../../../../data/models/wallet_model.dart';
 import '../../controllers/dashboard_controller.dart';
 
@@ -26,7 +27,7 @@ class InputLayout {
   }) {
     bool isLight = Get.theme.brightness == Brightness.light;
     Color onSurface = Get.theme.colorScheme.onSurface;
-    return Container(
+    return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       // width: 350,
       child: Column(
@@ -182,7 +183,57 @@ class InputLayout {
               padding: EdgeInsets.all(12),
               child: CustomText.normal("Rp", context: context),
             ),
+            onChanged: controller.trimAdminFee,
           ),
+
+          Obx(() {
+            if (controller.adminFeeStr.value.isNotEmpty &&
+                controller.adminFeeStr.value != '0') {
+              return Column(
+                spacing: 12,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  CustomText.normal(
+                    "Admin Fee On",
+                    context: context,
+                    isBold: true,
+                  ),
+                  Row(
+                    children: [
+                      Obx(
+                        () => RadioGroup(
+                          groupValue: controller.adminFeeOn.value,
+                          onChanged: (val) =>
+                              controller.onChangeAdminFeeOn(val!),
+                          child: Radio(value: AdminFeeOn.sender),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () =>
+                            controller.onChangeAdminFeeOn(AdminFeeOn.sender),
+                        child: CustomText.normal('Sender', context: context),
+                      ),
+                      SizedBox(width: 16),
+                      Obx(
+                        () => RadioGroup(
+                          groupValue: controller.adminFeeOn.value,
+                          onChanged: (val) =>
+                              controller.onChangeAdminFeeOn(val!),
+                          child: Radio(value: AdminFeeOn.recipient),
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () =>
+                            controller.onChangeAdminFeeOn(AdminFeeOn.recipient),
+                        child: CustomText.normal('Recipient', context: context),
+                      ),
+                    ],
+                  ),
+                ],
+              );
+            }
+            return SizedBox.shrink();
+          }),
         ],
       ),
     );

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../../core/widgets/warning_dialog.dart';
 import '../controllers/home_controller.dart';
-import 'widgets/custom_app_bar.dart';
 import 'widgets/custom_navigation_bar.dart';
 
 class HomeView extends GetView<HomeController> {
@@ -14,10 +14,11 @@ class HomeView extends GetView<HomeController> {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(kToolbarHeight),
         child: Obx(
-          () => CustomAppBar(
+          () => CustomAppBar.basic(
             title: controller.getCurrentPage().name,
             currentThemeName: controller.currentThemeMode.value,
             onChanged: controller.updateCurrentTheme,
+            context: context,
             confirmLogout: () async {
               bool confirm = await WarningDialog.showConfirmDialog(
                 context: context,

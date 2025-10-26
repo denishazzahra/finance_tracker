@@ -111,27 +111,8 @@ class HistoryController extends GetxController {
 
   Future<void> deleteTransaction(TransactionModel selectedTrans) async {
     try {
-      String id = selectedTrans.id!;
       transactions.remove(selectedTrans);
       DateTime tempDate = CustomConverter.nMonthDiff(monthDiff.value);
-      // also delete the linked transaction (ex: topup or transfer money)
-      if (selectedTrans.isLinked ?? false) {
-        TransactionModel? linkedTrans;
-        if (selectedTrans.linkedId != null) {
-          linkedTrans = transactions.firstWhereOrNull(
-            (e) => e.id == selectedTrans.linkedId,
-          );
-        } else {
-          linkedTrans = transactions.firstWhereOrNull((e) => e.linkedId == id);
-        }
-        transactions.remove(linkedTrans);
-        if (linkedTrans != null) {
-          await TransactionService.delete(
-            linkedTrans,
-            resetBalance: resetBalance.value,
-          );
-        }
-      }
       await TransactionService.delete(
         selectedTrans,
         resetBalance: resetBalance.value,

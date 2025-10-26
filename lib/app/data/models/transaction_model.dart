@@ -12,8 +12,7 @@ class TransactionModel {
   String? category;
   String? desc;
   DateTime? dateTime;
-  bool? isLinked;
-  String? linkedId;
+  TransferModel? transfer;
 
   TransactionModel({
     this.id,
@@ -23,41 +22,34 @@ class TransactionModel {
     this.desc,
     this.dateTime,
     this.type,
-    this.isLinked,
-    this.linkedId,
+    this.transfer,
   });
 
-  factory TransactionModel.fromTransfer(
-    TransferModel transfer, {
-    bool isFrom = true,
-    String? id,
-  }) {
+  factory TransactionModel.fromTransfer(TransferModel transfer) {
     bool isCash = transfer.to.name == "Cash";
-    if (isFrom) {
-      // print(-(transfer.amount + transfer.adminFee));
-      String desc =
-          "${isCash ? 'WITHDRAWAL' : 'TOP-UP'} ${CustomConverter.doubleToCurrency(transfer.amount)} TO ${transfer.to.name} WITH ADMIN FEE ${CustomConverter.doubleToCurrency(transfer.adminFee)}";
-      return TransactionModel(
-        wallet: transfer.from,
-        amount: transfer.amount + transfer.adminFee,
-        type: 'Expense',
-        category: isCash ? 'Others' : 'Top-up',
-        desc: desc,
-        isLinked: true,
-      );
-    } else {
-      String desc =
-          "${isCash ? 'WITHDRAWAL' : 'TOP-UP'} ${CustomConverter.doubleToCurrency(transfer.amount)} FROM ${transfer.from.name}";
-      return TransactionModel(
-        wallet: transfer.to,
-        amount: transfer.amount,
-        type: isCash ? 'Others' : 'Income',
-        category: 'Top-up',
-        desc: desc,
-        isLinked: true,
-        linkedId: id,
-      );
-    }
+
+    String desc =
+        "${isCash ? 'WITHDRAWAL' : 'TOP-UP'} ${CustomConverter.doubleToCurrency(transfer.amount)} TO ${transfer.to.name} WITH ADMIN FEE ${CustomConverter.doubleToCurrency(transfer.adminFee)} (ADMIN FEE on ${transfer.adminFeeOn.name})";
+    return TransactionModel(
+      type: 'Expense',
+      amount: transfer.adminFee,
+      category: isCash ? 'Others' : 'Top-up',
+      desc: desc,
+      transfer: transfer,
+    );
+  }
+
+  Map<String, dynamic> toJsonFromTransfer({bool isArchive = false}) {
+    return {
+      'type': type,
+      'amount': -amount!,
+      'category': category,
+      'desc': desc,
+      'transfer': transfer?.toJson(),
+      'dateTime': isArchive
+          ? dateTime?.toIso8601String()
+          : FieldValue.serverTimestamp(),
+    };
   }
 
   factory TransactionModel.fromJson(
@@ -66,7 +58,9 @@ class TransactionModel {
   }) {
     return TransactionModel(
       id: json['id'],
-      wallet: WalletModel.fromJson(json['wallet'], isArchive: isArchive),
+      wallet: json.containsKey('wallet')
+          ? WalletModel.fromJson(json['wallet'], isArchive: isArchive)
+          : null,
       amount: json['amount'].toDouble(),
       type: json['type'],
       category: json['category'],
@@ -74,15 +68,17 @@ class TransactionModel {
       dateTime: isArchive
           ? DateTime.parse(json['dateTime'])
           : (json['dateTime'] as Timestamp).toDate(),
-      isLinked: json['isLinked'] ?? false,
-      linkedId: json['linkedId'],
+      transfer: json.containsKey('transfer')
+          ? TransferModel.fromJson(json['transfer'])
+          : null,
     );
   }
 
   Map<String, dynamic> toJson({bool isArchive = false}) {
     return {
       if (isArchive) 'id': id,
-      'wallet': wallet?.toJson(isTransaction: true, isArchive: isArchive),
+      if (transfer == null)
+        'wallet': wallet?.toJson(isTransaction: true, isArchive: isArchive),
       'amount': type == "Income" ? amount : -amount!,
       'type': type,
       'category': category,
@@ -90,8 +86,7 @@ class TransactionModel {
       'dateTime': isArchive
           ? dateTime?.toIso8601String()
           : FieldValue.serverTimestamp(),
-      'isLinked': isLinked,
-      if (linkedId != null) 'linkedId': linkedId,
+      if (transfer != null) 'transfer': transfer?.toJson(),
     };
   }
 }

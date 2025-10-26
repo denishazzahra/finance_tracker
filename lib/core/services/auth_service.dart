@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -51,17 +53,19 @@ class AuthService {
       );
       user = userCredential.user;
     } else {
-      final GoogleSignInAccount googleUser = await GoogleSignIn.instance
-          .authenticate();
+      final clientId = dotenv.env['GOOGLE_ANDROID_CLIENT_ID'];
+      final GoogleSignIn googleSignIn = GoogleSignIn.instance;
 
-      final GoogleSignInAuthentication googleAuth = googleUser.authentication;
+      await googleSignIn.initialize(clientId: clientId);
+      final googleUser = await googleSignIn.authenticate(scopeHint: ['email']);
+      final googleAuth = googleUser.authentication;
 
+      // Create credential for Firebase
       final credential = GoogleAuthProvider.credential(
         idToken: googleAuth.idToken,
       );
 
-      final UserCredential userCredential = await FirebaseAuth.instance
-          .signInWithCredential(credential);
+      final userCredential = await auth.signInWithCredential(credential);
       user = userCredential.user;
     }
 

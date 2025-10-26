@@ -28,7 +28,7 @@ class CustomTheme {
       backgroundColor: CustomColor.backgroundLight,
       scrolledUnderElevation: 0,
       systemOverlayStyle: SystemUiOverlayStyle(
-        statusBarColor: Colors.black,
+        statusBarColor: CustomColor.backgroundLight,
         statusBarIconBrightness: Brightness.dark,
       ),
     ),
@@ -78,8 +78,8 @@ class CustomTheme {
       backgroundColor: CustomColor.backgroundDark,
       scrolledUnderElevation: 0,
       systemOverlayStyle: SystemUiOverlayStyle(
-        statusBarColor: Colors.black,
-        statusBarIconBrightness: Brightness.dark,
+        statusBarColor: CustomColor.backgroundDark,
+        statusBarIconBrightness: Brightness.light,
       ),
     ),
     navigationBarTheme: NavigationBarThemeData(

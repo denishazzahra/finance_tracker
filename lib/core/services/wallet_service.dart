@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:finance_tracker/app/data/models/transfer_model.dart';
-import 'package:finance_tracker/app/data/models/wallet_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../app/data/models/transaction_model.dart';
+import '../../app/data/models/transfer_model.dart';
+import '../../app/data/models/wallet_model.dart';
 import 'transaction_service.dart';
 
 class WalletService {
@@ -81,7 +81,14 @@ class WalletService {
             }
 
             final fromBalance = (fromSnap['balance'] as num?)?.toDouble() ?? 0;
-            final totalDeduction = transfer.amount + transfer.adminFee;
+            final totalDeduction =
+                transfer.amount +
+                transfer.adminFee *
+                    (transfer.adminFeeOn == AdminFeeOn.sender ? 1 : 0);
+            final totalTransfer =
+                transfer.amount -
+                transfer.adminFee *
+                    (transfer.adminFeeOn == AdminFeeOn.recipient ? 1 : 0);
 
             if (fromBalance < totalDeduction) {
               return "Not enough balance in source wallet"; // return error string
@@ -92,7 +99,7 @@ class WalletService {
               'balance': FieldValue.increment(-totalDeduction),
             });
             transaction.update(toRef, {
-              'balance': FieldValue.increment(transfer.amount),
+              'balance': FieldValue.increment(totalTransfer),
             });
 
             return "success"; // indicate success
@@ -104,19 +111,12 @@ class WalletService {
               ); // now we throw outside of the transaction
             }
 
-            // Only create transaction records if the Firestore transaction succeeded
-            String fromId = await TransactionService.create(
-              TransactionModel.fromTransfer(transfer),
-              isTopup: true,
-            );
-            await TransactionService.create(
-              TransactionModel.fromTransfer(
-                transfer,
-                isFrom: false,
-                id: fromId,
-              ),
-              isTopup: true,
-            );
+            if (transfer.adminFee != 0) {
+              await TransactionService.create(
+                TransactionModel.fromTransfer(transfer),
+                isTopup: true,
+              );
+            }
           });
     } catch (e) {
       // Now the actual message is preserved
