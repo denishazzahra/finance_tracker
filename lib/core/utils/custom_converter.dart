@@ -19,6 +19,14 @@ class CustomConverter {
     return formatter.format(datetime);
   }
 
+  static String timeToDisplay(DateTime? datetime) {
+    if (datetime == null) {
+      return '-';
+    }
+    final DateFormat formatter = DateFormat("h.mm a");
+    return formatter.format(datetime);
+  }
+
   static String dateToDisplay(DateTime? datetime) {
     if (datetime == null) {
       return '-';

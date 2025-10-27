@@ -78,11 +78,16 @@ class CustomText {
     required BuildContext context,
     bool isBold = false,
     bool isCenter = false,
+    bool isRight = false,
     Color? color,
   }) {
     return Text(
       text,
-      textAlign: isCenter ? TextAlign.center : TextAlign.left,
+      textAlign: isCenter
+          ? TextAlign.center
+          : isRight
+          ? TextAlign.right
+          : TextAlign.left,
       style: TextStyle(
         fontWeight: isBold ? FontWeight.w600 : FontWeight.normal,
         color: color ?? Theme.of(context).colorScheme.onSurface,

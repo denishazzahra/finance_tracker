@@ -124,9 +124,8 @@ class DashboardController extends GetxController {
           margin: EdgeInsets.all(16),
         );
       } else {
-        await WalletService.create(wallet: wallet);
         Get.back();
-        await Future.delayed(Duration(milliseconds: 100));
+        await WalletService.create(wallet: wallet);
         Get.snackbar(
           'Success',
           "Wallet created successfully.",
@@ -157,6 +156,7 @@ class DashboardController extends GetxController {
           margin: EdgeInsets.all(16),
         );
       } else {
+        Get.back();
         isLoading.value = true;
         TransactionModel transaction = TransactionModel(
           wallet: fromWallet.value,
@@ -168,8 +168,6 @@ class DashboardController extends GetxController {
           desc: desc.text.trim().isEmpty ? null : desc.text.trim(),
         );
         await TransactionService.create(transaction);
-        Get.back();
-        await Future.delayed(Duration(milliseconds: 100));
         Get.snackbar(
           'Success',
           "Transaction added successfully.",
@@ -200,6 +198,7 @@ class DashboardController extends GetxController {
           margin: EdgeInsets.all(16),
         );
       } else {
+        Get.back();
         TransferModel transfer = TransferModel(
           from: fromWallet.value!,
           to: toWallet.value!,
@@ -214,8 +213,6 @@ class DashboardController extends GetxController {
           adminFeeOn: adminFeeOn.value,
         );
         await WalletService.transfer(transfer: transfer);
-        Get.back();
-        await Future.delayed(Duration(milliseconds: 100));
         Get.snackbar(
           'Success',
           "Money transfered successfully.",
@@ -254,9 +251,8 @@ class DashboardController extends GetxController {
         );
       } else {
         isLoading.value = true;
-        await WalletService.update(wallet: wallet);
         Get.back();
-        await Future.delayed(Duration(milliseconds: 100));
+        await WalletService.update(wallet: wallet);
         Get.snackbar(
           'Success',
           "Wallet updated successfully.",
@@ -278,9 +274,8 @@ class DashboardController extends GetxController {
   Future<void> deleteWallet(String id) async {
     try {
       isLoading.value = true;
-      await WalletService.delete(id: id);
       Get.back();
-      await Future.delayed(Duration(milliseconds: 100));
+      await WalletService.delete(id: id);
       Get.snackbar(
         'Success',
         "Wallet deleted successfully.",

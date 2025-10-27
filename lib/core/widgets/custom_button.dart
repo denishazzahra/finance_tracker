@@ -11,6 +11,7 @@ class CustomButton {
     IconData? icon,
     required BuildContext context,
     Function? onPressed,
+    bool isCompact = false,
   }) {
     return ElevatedButton(
       onPressed: onPressed != null
@@ -32,6 +33,7 @@ class CustomButton {
               color: Theme.of(context).colorScheme.onPrimary,
             )
           : Row(
+              mainAxisSize: isCompact ? MainAxisSize.min : MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.center,
               spacing: 8,
               children: [

@@ -60,6 +60,22 @@ class TransactionService {
     }).toList();
   }
 
+  static Future<Map<String, dynamic>?> getById({required String id}) async {
+    final user = _auth.currentUser;
+    if (user == null) throw Exception("User not logged in");
+    final snapshot = await _db
+        .collection('users')
+        .doc(user.uid)
+        .collection('transactions')
+        .doc(id)
+        .get();
+    Map<String, dynamic>? data;
+    if (snapshot.data() != null) {
+      data = {'id': id, ...snapshot.data()!};
+    }
+    return data;
+  }
+
   static Future<void> delete(
     TransactionModel transaction, {
     bool resetBalance = true,
