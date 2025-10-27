@@ -21,7 +21,9 @@ class DetailLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isLight = Theme.of(context).brightness == Brightness.light;
     Color? chipCol = Theme.of(context).chipTheme.backgroundColor;
+    Color? onSurface = Theme.of(context).colorScheme.onSurface;
     return RefreshIndicator(
       onRefresh: () => onRefresh(),
       child: ListView(
@@ -41,6 +43,7 @@ class DetailLayout extends StatelessWidget {
             CustomConverter.doubleToCurrency(transaction?.amount),
             context: context,
             isCenter: true,
+            color: isLight ? onSurface : null,
           ),
           SizedBox(height: 16),
           Divider(color: chipCol),
@@ -179,6 +182,7 @@ class DetailLayout extends StatelessWidget {
     bool isCopyAllowed = false,
     bool isBold = false,
   }) {
+    bool isLight = Theme.of(context).brightness == Brightness.light;
     Color? primary = Theme.of(context).colorScheme.primary;
     return Row(
       crossAxisAlignment: isCopyAllowed
@@ -208,7 +212,11 @@ class DetailLayout extends StatelessWidget {
                 margin: EdgeInsets.all(16),
               );
             },
-            child: Icon(Symbols.content_copy, color: primary, size: 16),
+            child: Icon(
+              Symbols.content_copy,
+              color: isLight ? Colors.orange.shade700 : primary,
+              size: 16,
+            ),
           ),
       ],
     );
