@@ -113,6 +113,8 @@ class CustomButton {
     Function? onPressed,
     required BuildContext context,
   }) {
+    bool isLight = Theme.of(context).brightness == Brightness.light;
+    Color? onSurface = Theme.of(context).colorScheme.onSurface;
     return ElevatedButton(
       onPressed: onPressed != null
           ? () {
@@ -124,6 +126,7 @@ class CustomButton {
         foregroundColor: Colors.black,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        side: isLight ? BorderSide(color: onSurface) : null,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -142,6 +145,8 @@ class CustomButton {
   }
 
   static Widget redEye(RxBool isObscure, {required BuildContext context}) {
+    bool isLight = Theme.of(context).brightness == Brightness.light;
+    Color? onSurface = Theme.of(context).colorScheme.onSurface;
     return GestureDetector(
       onTap: () {
         isObscure.value = !isObscure.value;
@@ -150,7 +155,7 @@ class CustomButton {
         isObscure.value
             ? Icons.visibility_outlined
             : Icons.visibility_off_outlined,
-        color: Theme.of(context).primaryColor,
+        color: isLight ? onSurface : Theme.of(context).primaryColor,
       ),
     );
   }

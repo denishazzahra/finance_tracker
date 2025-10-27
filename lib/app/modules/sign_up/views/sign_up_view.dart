@@ -12,6 +12,9 @@ class SignUpView extends GetView<SignUpController> {
   const SignUpView({super.key});
   @override
   Widget build(BuildContext context) {
+    bool isLight = Theme.of(context).brightness == Brightness.light;
+    Color? onSurface = Theme.of(context).colorScheme.onSurface;
+    Color? primary = Theme.of(context).primaryColor;
     return Scaffold(
       body: Center(
         child: SingleChildScrollView(
@@ -24,7 +27,11 @@ class SignUpView extends GetView<SignUpController> {
               children: [
                 Image.asset('assets/images/signup.png', height: 196),
                 SizedBox(height: 12),
-                CustomText.h1("Sign Up", context: context),
+                CustomText.h1(
+                  "Sign Up",
+                  context: context,
+                  color: isLight ? onSurface : null,
+                ),
                 SizedBox(height: 12),
                 CustomTextField.auth(
                   controller.fullName,
@@ -32,7 +39,7 @@ class SignUpView extends GetView<SignUpController> {
                   context: context,
                   prefixIcon: Icon(
                     Symbols.person,
-                    color: Theme.of(context).primaryColor,
+                    color: isLight ? onSurface : primary,
                   ),
                 ),
                 CustomTextField.auth(
@@ -41,7 +48,7 @@ class SignUpView extends GetView<SignUpController> {
                   context: context,
                   prefixIcon: Icon(
                     Symbols.mail,
-                    color: Theme.of(context).primaryColor,
+                    color: isLight ? onSurface : primary,
                   ),
                 ),
                 Obx(
@@ -52,7 +59,7 @@ class SignUpView extends GetView<SignUpController> {
                     isObscure: controller.isObscurePass.value,
                     prefixIcon: Icon(
                       Symbols.lock,
-                      color: Theme.of(context).primaryColor,
+                      color: isLight ? onSurface : primary,
                     ),
                     suffixIcon: CustomButton.redEye(
                       controller.isObscurePass,
@@ -68,7 +75,7 @@ class SignUpView extends GetView<SignUpController> {
                     isObscure: controller.isObscureConfirmPass.value,
                     prefixIcon: Icon(
                       Symbols.lock,
-                      color: Theme.of(context).primaryColor,
+                      color: isLight ? onSurface : primary,
                     ),
                     suffixIcon: CustomButton.redEye(
                       controller.isObscureConfirmPass,
@@ -95,7 +102,7 @@ class SignUpView extends GetView<SignUpController> {
                         "Login",
                         context: context,
                         isBold: true,
-                        color: Theme.of(context).primaryColor,
+                        color: isLight ? Colors.orange.shade700 : primary,
                       ),
                     ),
                   ],

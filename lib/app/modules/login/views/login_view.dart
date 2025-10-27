@@ -13,6 +13,9 @@ class LoginView extends GetView<LoginController> {
   const LoginView({super.key});
   @override
   Widget build(BuildContext context) {
+    bool isLight = Theme.of(context).brightness == Brightness.light;
+    Color? onSurface = Theme.of(context).colorScheme.onSurface;
+    Color? primary = Theme.of(context).primaryColor;
     return Scaffold(
       body: Center(
         child: SingleChildScrollView(
@@ -25,7 +28,11 @@ class LoginView extends GetView<LoginController> {
               children: [
                 Image.asset('assets/images/login.png', height: 196),
                 SizedBox(height: 12),
-                CustomText.h1("Login", context: context),
+                CustomText.h1(
+                  "Login",
+                  context: context,
+                  color: isLight ? onSurface : null,
+                ),
                 SizedBox(height: 12),
                 CustomTextField.auth(
                   controller.email,
@@ -33,7 +40,7 @@ class LoginView extends GetView<LoginController> {
                   context: context,
                   prefixIcon: Icon(
                     Symbols.mail,
-                    color: Theme.of(context).primaryColor,
+                    color: isLight ? onSurface : primary,
                   ),
                 ),
                 Obx(
@@ -44,7 +51,7 @@ class LoginView extends GetView<LoginController> {
                     isObscure: controller.isObscure.value,
                     prefixIcon: Icon(
                       Symbols.lock,
-                      color: Theme.of(context).primaryColor,
+                      color: isLight ? onSurface : primary,
                     ),
                     suffixIcon: CustomButton.redEye(
                       controller.isObscure,
@@ -57,7 +64,7 @@ class LoginView extends GetView<LoginController> {
                   if (controller.isLoading.value) {
                     return Center(
                       child: CircularProgressIndicator(
-                        color: Theme.of(context).primaryColor,
+                        color: isLight ? onSurface : primary,
                       ),
                     );
                   }
@@ -80,7 +87,7 @@ class LoginView extends GetView<LoginController> {
                         "Sign Up",
                         context: context,
                         isBold: true,
-                        color: Theme.of(context).primaryColor,
+                        color: isLight ? Colors.orange.shade700 : primary,
                       ),
                     ),
                   ],
@@ -90,7 +97,7 @@ class LoginView extends GetView<LoginController> {
                   if (controller.isLoadingGoogle.value) {
                     return Center(
                       child: CircularProgressIndicator(
-                        color: Theme.of(context).primaryColor,
+                        color: isLight ? onSurface : primary,
                       ),
                     );
                   } else {
