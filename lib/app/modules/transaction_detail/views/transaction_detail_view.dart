@@ -7,6 +7,7 @@ import '../../../../core/widgets/custom_button.dart';
 import '../../../../core/widgets/custom_text.dart';
 import '../controllers/transaction_detail_controller.dart';
 import 'widgets/detail_layout.dart';
+import 'widgets/detail_skeleton.dart';
 
 class TransactionDetailView extends GetView<TransactionDetailController> {
   const TransactionDetailView({super.key});
@@ -25,7 +26,7 @@ class TransactionDetailView extends GetView<TransactionDetailController> {
       ),
       body: Obx(() {
         if (controller.isLoading.value) {
-          return Center(child: CircularProgressIndicator());
+          return DetailSkeleton();
         } else if (controller.transaction.value != null) {
           return DetailLayout(
             transaction: controller.transaction.value,
