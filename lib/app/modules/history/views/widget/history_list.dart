@@ -5,6 +5,7 @@ import 'package:material_symbols_icons/symbols.dart';
 import '../../../../../core/consts/app_const.dart';
 import '../../../../../core/theme/finance_color.dart';
 import '../../../../../core/utils/custom_converter.dart';
+import '../../../../../core/widgets/custom_icon.dart';
 import '../../../../../core/widgets/custom_text.dart';
 import '../../../../../core/widgets/warning_dialog.dart';
 import '../../../../data/models/transaction_model.dart';
@@ -88,78 +89,77 @@ class HistoryList extends StatelessWidget {
                           isBold: true,
                         ),
                       ],
-                      Dismissible(
-                        key: UniqueKey(),
-                        direction: DismissDirection.startToEnd,
-                        background: Padding(
-                          padding: EdgeInsets.only(left: 16),
-                          child: Align(
-                            alignment: AlignmentGeometry.centerLeft,
-                            child: Icon(Symbols.delete, color: onDanger),
+                      GestureDetector(
+                        onTap: () =>
+                            Get.toNamed('/transactions/${currTransaction.id}'),
+                        child: Dismissible(
+                          key: UniqueKey(),
+                          direction: DismissDirection.startToEnd,
+                          background: Padding(
+                            padding: EdgeInsets.only(left: 16),
+                            child: Align(
+                              alignment: AlignmentGeometry.centerLeft,
+                              child: Icon(Symbols.delete, color: onDanger),
+                            ),
                           ),
-                        ),
-                        confirmDismiss: (direction) async {
-                          return await WarningDialog.showConfirmDialog(
-                            title: "Delete Transaction",
-                            confirmText: "Delete",
-                            context: context,
-                            content:
-                                "Are you sure you want to delete this transaction?",
-                            isDanger: true,
-                            checkBox: resetBalance,
-                            checkBoxLabel: "Apply change to wallet balance",
-                          );
-                        },
-                        onDismissed: (direction) => onDelete(currTransaction),
-                        child: Row(
-                          spacing: 16,
-                          children: [
-                            Container(
-                              width: 36,
-                              height: 36,
-                              decoration: BoxDecoration(
-                                color: bgCol,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(4),
+                          confirmDismiss: (direction) async {
+                            return await WarningDialog.showConfirmDialog(
+                              title: "Delete Transaction",
+                              confirmText: "Delete",
+                              context: context,
+                              content:
+                                  "Are you sure you want to delete this transaction?",
+                              isDanger: true,
+                              checkBox: resetBalance,
+                              checkBoxLabel: "Apply change to wallet balance",
+                            );
+                          },
+                          onDismissed: (direction) => onDelete(currTransaction),
+                          child: Row(
+                            spacing: 16,
+                            children: [
+                              CustomIcon.display(
+                                bgCol: bgCol,
+                                iconCol: fgCol,
+                                icon: icon,
+                              ),
+
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  spacing: 8,
+                                  children: [
+                                    Row(
+                                      spacing: 16,
+                                      children: [
+                                        Expanded(
+                                          child: CustomText.normal(
+                                            currTransaction.category ??
+                                                'Unknown',
+                                            isBold: true,
+                                            context: context,
+                                          ),
+                                        ),
+                                        CustomText.normal(
+                                          CustomConverter.doubleToCurrency(
+                                            currTransaction.amount,
+                                          ),
+                                          context: context,
+                                          color: fgCol,
+                                        ),
+                                      ],
+                                    ),
+                                    // if (currTransaction.desc != null)
+                                    CustomText.small(
+                                      currTransaction.desc ?? '-',
+                                      context: context,
+                                    ),
+                                  ],
                                 ),
                               ),
-                              child: Center(
-                                child: Icon(icon, color: fgCol, size: 24),
-                              ),
-                            ),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                spacing: 8,
-                                children: [
-                                  Row(
-                                    spacing: 16,
-                                    children: [
-                                      Expanded(
-                                        child: CustomText.normal(
-                                          currTransaction.category ?? 'Unknown',
-                                          isBold: true,
-                                          context: context,
-                                        ),
-                                      ),
-                                      CustomText.normal(
-                                        CustomConverter.doubleToCurrency(
-                                          currTransaction.amount,
-                                        ),
-                                        context: context,
-                                        color: fgCol,
-                                      ),
-                                    ],
-                                  ),
-                                  // if (currTransaction.desc != null)
-                                  CustomText.small(
-                                    currTransaction.desc ?? '-',
-                                    context: context,
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ],

@@ -9,6 +9,7 @@ abstract class Routes {
   static const LOGIN = _Paths.LOGIN;
   static const SIGN_UP = _Paths.SIGN_UP;
   static const INSIGHT = _Paths.INSIGHT;
+  static const TRANSACTION_DETAIL = _Paths.TRANSACTION_DETAIL;
 }
 
 abstract class _Paths {
@@ -19,4 +20,5 @@ abstract class _Paths {
   static const LOGIN = '/login';
   static const SIGN_UP = '/sign-up';
   static const INSIGHT = '/insight';
+  static const TRANSACTION_DETAIL = '/transactions/:id';
 }

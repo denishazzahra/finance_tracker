@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../../../core/consts/app_const.dart';
 import '../../../../../core/theme/finance_color.dart';
 import '../../../../../core/utils/custom_converter.dart';
+import '../../../../../core/widgets/custom_icon.dart';
 import '../../../../../core/widgets/custom_text.dart';
 import '../../../../data/models/transaction_model.dart';
 
@@ -60,22 +61,16 @@ Widget summaryChart({
                           fontWeight: FontWeight.w600,
                         ),
                         radius: width / 2 - (centerSpaceRadius + 32),
-                        badgeWidget: Container(
-                          padding: EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            // borderRadius: BorderRadius.circular(4),
-                            color: transactionTypeMap(
-                              context,
-                            )[entry.key]![isLight ? 'bgCol' : 'fgCol'],
-                          ),
-                          child: Icon(
-                            transactionTypeMap(context)[entry.key]!['icon'],
-                            color: transactionTypeMap(
-                              context,
-                            )[entry.key]![isLight ? 'fgCol' : 'bgCol'],
-                            size: 32,
-                          ),
+                        badgeWidget: CustomIcon.display(
+                          bgCol: transactionTypeMap(
+                            context,
+                          )[entry.key]![isLight ? 'bgCol' : 'fgCol'],
+                          iconCol: transactionTypeMap(
+                            context,
+                          )[entry.key]![isLight ? 'fgCol' : 'bgCol'],
+                          icon: transactionTypeMap(context)[entry.key]!['icon'],
+                          isCircle: true,
+                          iconSize: 32,
                         ),
                         badgePositionPercentageOffset: 1,
                       ),
@@ -104,23 +99,12 @@ Widget summaryChart({
                         Row(
                           spacing: 16,
                           children: [
-                            Container(
-                              width: 36,
-                              height: 36,
-                              decoration: BoxDecoration(
-                                color: isLight ? bgCol : fgCol,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(4),
-                                ),
-                              ),
-                              child: Center(
-                                child: Icon(
-                                  icon,
-                                  color: isLight ? fgCol : bgCol,
-                                  size: 24,
-                                ),
-                              ),
+                            CustomIcon.display(
+                              bgCol: isLight ? bgCol : fgCol,
+                              iconCol: isLight ? fgCol : bgCol,
+                              icon: icon,
                             ),
+
                             Expanded(
                               child: CustomText.normal(
                                 entry.key,
@@ -192,20 +176,13 @@ Widget summaryChart({
                             color: transactionCategoryMap[entry.key]!['fgCol'],
                             fontWeight: FontWeight.w600,
                           ),
-                          badgeWidget: Container(
-                            padding: EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              // borderRadius: BorderRadius.circular(4),
-                              color:
-                                  transactionCategoryMap[entry.key]!['fgCol'],
-                            ),
-                            child: Icon(
-                              transactionCategoryMap[entry.key]!['icon'],
-                              color:
-                                  transactionCategoryMap[entry.key]!['bgCol'],
-                              size: 32,
-                            ),
+                          badgeWidget: CustomIcon.display(
+                            bgCol: transactionCategoryMap[entry.key]!['fgCol'],
+                            iconCol:
+                                transactionCategoryMap[entry.key]!['bgCol'],
+                            icon: transactionCategoryMap[entry.key]!['icon'],
+                            isCircle: true,
+                            iconSize: 32,
                           ),
                           radius: width / 2 - (centerSpaceRadius + 32),
                           badgePositionPercentageOffset: 1,
@@ -231,18 +208,10 @@ Widget summaryChart({
                         Row(
                           spacing: 16,
                           children: [
-                            Container(
-                              width: 36,
-                              height: 36,
-                              decoration: BoxDecoration(
-                                color: fgCol,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(4),
-                                ),
-                              ),
-                              child: Center(
-                                child: Icon(icon, color: bgCol, size: 24),
-                              ),
+                            CustomIcon.display(
+                              bgCol: bgCol,
+                              iconCol: fgCol,
+                              icon: icon,
                             ),
                             Expanded(
                               child: CustomText.normal(

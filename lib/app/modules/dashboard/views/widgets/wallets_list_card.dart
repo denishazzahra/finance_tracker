@@ -5,6 +5,7 @@ import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../../../core/consts/app_const.dart';
 import '../../../../../core/utils/custom_converter.dart';
+import '../../../../../core/widgets/custom_icon.dart';
 import '../../../../../core/widgets/custom_text.dart';
 import 'input_layout.dart';
 
@@ -82,28 +83,16 @@ class WalletsListCard extends StatelessWidget {
                           child: Row(
                             spacing: 16,
                             children: [
-                              Container(
-                                width: 36,
-                                height: 36,
-                                decoration: BoxDecoration(
-                                  color: walletTypeMap(
-                                    context,
-                                  )[controller.wallets[index].type]?['bgCol'],
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(4),
-                                  ),
-                                ),
-                                child: Center(
-                                  child: Icon(
-                                    walletTypeMap(
-                                      context,
-                                    )[controller.wallets[index].type]?['icon'],
-                                    color: walletTypeMap(
-                                      context,
-                                    )[controller.wallets[index].type]?['fgCol'],
-                                    size: 24,
-                                  ),
-                                ),
+                              CustomIcon.display(
+                                bgCol: walletTypeMap(
+                                  context,
+                                )[controller.wallets[index].type]?['bgCol'],
+                                iconCol: walletTypeMap(
+                                  context,
+                                )[controller.wallets[index].type]?['fgCol'],
+                                icon: walletTypeMap(
+                                  context,
+                                )[controller.wallets[index].type]?['icon'],
                               ),
                               Expanded(
                                 child: Column(
