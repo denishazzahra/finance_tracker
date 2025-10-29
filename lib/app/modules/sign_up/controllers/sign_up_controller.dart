@@ -37,7 +37,10 @@ class SignUpController extends GetxController {
     try {
       if (await network.ensureConnection()) {
         isLoading.value = true;
-        if (email.text.trim().isEmpty || fullName.text.trim().isEmpty) {
+        if (email.text.trim().isEmpty ||
+            fullName.text.trim().isEmpty ||
+            password.text.trim().isEmpty ||
+            confirmPassword.text.trim().isEmpty) {
           Get.snackbar(
             'All fields are required',
             'Please fill in all the fields before continuing.',

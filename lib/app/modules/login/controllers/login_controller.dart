@@ -11,7 +11,6 @@ class LoginController extends GetxController {
   late final TextEditingController password;
   RxBool isObscure = true.obs;
   RxBool isLoading = false.obs;
-  RxBool isLoadingGoogle = false.obs;
   NetworkController network = Get.find<NetworkController>();
 
   @override
@@ -30,6 +29,14 @@ class LoginController extends GetxController {
 
   Future<void> login() async {
     try {
+      if (email.text.trim().isEmpty || password.text.trim().isEmpty) {
+        Get.snackbar(
+          'All fields are required',
+          'Please fill in all the fields before continuing.',
+          margin: EdgeInsets.all(16),
+        );
+        return;
+      }
       if (await network.ensureConnection()) {
         isLoading.value = true;
         final User? user = await AuthService.loginWithEmailAndPassword(
@@ -57,7 +64,6 @@ class LoginController extends GetxController {
   Future<void> loginWithGoogle() async {
     try {
       if (await network.ensureConnection()) {
-        isLoadingGoogle.value = true;
         User? user = await AuthService.loginWithGoogle();
         Get.offAllNamed('/home'); // navigate on success
         Get.snackbar(
@@ -72,8 +78,6 @@ class LoginController extends GetxController {
         e.message ?? 'Unknown error',
         margin: EdgeInsets.all(16),
       );
-    } finally {
-      isLoadingGoogle.value = false;
     }
   }
 }
