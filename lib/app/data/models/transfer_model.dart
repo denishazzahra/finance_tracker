@@ -22,7 +22,7 @@ class TransferModel {
       from: WalletModel.fromJson(json['from']),
       to: WalletModel.fromJson(json['to']),
       amount: json['amount'].toDouble(),
-      adminFee: json['adminFee'],
+      adminFee: json['adminFee'].toDouble(),
       adminFeeOn: AdminFeeOn.values.byName(json['adminFeeOn']),
     );
   }
