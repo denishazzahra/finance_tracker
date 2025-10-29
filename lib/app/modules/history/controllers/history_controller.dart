@@ -91,6 +91,7 @@ class HistoryController extends GetxController {
             margin: EdgeInsets.all(16),
           );
         }
+        hasInit.value = false;
         transactions.value =
             (await TransactionService.get(monthDiff: monthDiff.value))
                 .map((transaction) => TransactionModel.fromJson(transaction))

@@ -93,21 +93,11 @@ class LoginView extends GetView<LoginController> {
                   ],
                 ),
                 CustomDivider.withText('or', context: context),
-                Obx(() {
-                  if (controller.isLoadingGoogle.value) {
-                    return Center(
-                      child: CircularProgressIndicator(
-                        color: isLight ? onSurface : primary,
-                      ),
-                    );
-                  } else {
-                    return CustomButton.google(
-                      "Login with Google",
-                      context: context,
-                      onPressed: controller.loginWithGoogle,
-                    );
-                  }
-                }),
+                CustomButton.google(
+                  "Login with Google",
+                  context: context,
+                  onPressed: controller.loginWithGoogle,
+                ),
               ],
             ),
           ),
