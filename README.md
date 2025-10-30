@@ -51,7 +51,7 @@ Everything syncs in real time across devices.
 ### Installation
 ```bash
 git clone https://github.com/denishazzahra/finance_tracker.git
-cd finora
+cd finance_tracker
 flutter pub get
 flutter run
 ```
