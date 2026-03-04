@@ -209,8 +209,8 @@ Widget summaryChart({
                           spacing: 16,
                           children: [
                             CustomIcon.display(
-                              bgCol: bgCol,
-                              iconCol: fgCol,
+                              bgCol: fgCol,
+                              iconCol: bgCol,
                               icon: icon,
                             ),
                             Expanded(

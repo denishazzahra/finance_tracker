@@ -54,7 +54,7 @@ class CustomConverter {
       ex 5: month = 12, monthDiff = 12, newMonth = 24->12, yearDiff = 1
       ex 6: month = 12, monthDiff = 13, newMonth = 25->1, yearDiff = 2
       */
-      yearDiff = (newMonth - 1 / 12).floor();
+      yearDiff = ((newMonth - 1) / 12).floor();
       newMonth = (newMonth - 1) % 12 + 1;
     }
     final newDate = DateTime(temp.year + yearDiff, newMonth);
