@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:material_symbols_icons/symbols.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 import '../../../../core/utils/custom_converter.dart';
 import '../controllers/dashboard_controller.dart';
