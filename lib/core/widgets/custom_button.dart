@@ -144,7 +144,7 @@ class CustomButton {
     );
   }
 
-  static Widget redEye(RxBool isObscure, {required BuildContext context}) {
+  static Widget redEye(RxBool isObscure, {required BuildContext context, Color? color}) {
     bool isLight = Theme.of(context).brightness == Brightness.light;
     Color? onSurface = Theme.of(context).colorScheme.onSurface;
     return GestureDetector(
@@ -155,7 +155,7 @@ class CustomButton {
         isObscure.value
             ? Icons.visibility_outlined
             : Icons.visibility_off_outlined,
-        color: isLight ? onSurface : Theme.of(context).primaryColor,
+        color: color ?? (isLight ? onSurface : Theme.of(context).primaryColor),
       ),
     );
   }
@@ -175,7 +175,7 @@ class CustomButton {
     );
   }
 
-  static dropdown({
+  static DropdownButton<Object> dropdown({
     required dynamic selectedItem,
     required List<dynamic> items,
     required Function onChanged,

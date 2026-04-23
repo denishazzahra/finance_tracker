@@ -122,12 +122,6 @@ class DetailLayout extends StatelessWidget {
           ),
           SizedBox(height: 16),
           detailRow(
-            key: 'Time',
-            value: CustomConverter.timeToDisplay(transaction?.dateTime),
-            context: context,
-          ),
-          SizedBox(height: 16),
-          detailRow(
             key: 'Transaction ID',
             value: transaction!.id!,
             context: context,

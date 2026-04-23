@@ -17,7 +17,7 @@ class DashboardController extends GetxController {
   RxBool isMenuExpanded = false.obs;
   RxBool isLoading = true.obs;
   RxDouble totalBalance = 0.0.obs;
-  late final TextEditingController walletName, amount, adminFee, desc;
+  late final TextEditingController walletName, amount, adminFee, desc, dateStr;
   RxList<WalletModel> wallets = <WalletModel>[].obs;
   Rx<String?> walletType = Rx<String?>(null);
   Rx<String?> transactionType = Rx<String?>(null);
@@ -30,6 +30,8 @@ class DashboardController extends GetxController {
   RxString adminFeeStr = ''.obs;
   SharedPreferences prefs = Get.find<SharedPreferences>();
   RxBool hasInit = false.obs;
+  RxBool isObscure = true.obs;
+  Rx<DateTime> dateTime = DateTime.now().obs;
 
   @override
   void onInit() {
@@ -38,6 +40,7 @@ class DashboardController extends GetxController {
     amount = TextEditingController();
     adminFee = TextEditingController();
     desc = TextEditingController();
+    dateStr = TextEditingController();
     initializeData();
   }
 
@@ -47,6 +50,7 @@ class DashboardController extends GetxController {
     amount.dispose();
     adminFee.dispose();
     desc.dispose();
+    dateStr.dispose();
     super.onClose();
   }
 
@@ -166,6 +170,7 @@ class DashboardController extends GetxController {
           type: transactionType.value,
           category: transactionCategory.value,
           desc: desc.text.trim().isEmpty ? null : desc.text.trim(),
+          dateTime: dateTime.value,
         );
         await TransactionService.create(transaction);
         Get.snackbar(

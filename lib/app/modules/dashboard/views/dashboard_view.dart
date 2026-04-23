@@ -66,14 +66,20 @@ class DashboardView extends GetView<DashboardController> {
         child: ListView(
           padding: EdgeInsets.all(16),
           children: [
-            Obx(
-              () => BalanceCard(
-                balance: controller.totalBalance.value,
-                lastUpdated: CustomConverter.datetimeToDisplay(
-                  controller.lastUpdated.value,
+            Column(
+              spacing: 16,
+              children: [
+                Obx(
+                  () => BalanceCard(
+                    balance: controller.totalBalance.value,
+                    lastUpdated: CustomConverter.datetimeToDisplay(
+                      controller.lastUpdated.value,
+                    ),
+                    isLoading: controller.isLoading.value,
+                    isObscure: controller.isObscure.value,
+                  ),
                 ),
-                isLoading: controller.isLoading.value,
-              ),
+              ],
             ),
             SizedBox(height: 16),
             WalletsListCard(),

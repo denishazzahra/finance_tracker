@@ -51,6 +51,52 @@ class CustomTheme {
         return TextStyle(color: lightScheme.onSurface);
       }),
     ),
+    datePickerTheme: DatePickerThemeData(
+      backgroundColor: lightScheme.surface,
+      headerBackgroundColor: lightScheme.primary,
+      headerForegroundColor: lightScheme.onPrimary,
+
+      dayForegroundColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.disabled)) {
+          return lightScheme.onSurface.withValues(alpha: 0.3);
+        } else if (states.contains(WidgetState.selected)) {
+          return lightScheme.onPrimary;
+        }
+        return lightScheme.onSurface;
+      }),
+
+      dayBackgroundColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) {
+          return lightScheme.primary;
+        }
+        return Colors.transparent;
+      }),
+
+      todayForegroundColor: WidgetStateProperty.all(lightScheme.onSurface),
+      todayBorder: BorderSide(color: lightScheme.primary),
+
+      yearForegroundColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) {
+          return lightScheme.onPrimary;
+        }
+        return lightScheme.onSurface;
+      }),
+
+      yearBackgroundColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) {
+          return lightScheme.primary;
+        }
+        return Colors.transparent;
+      }),
+
+      cancelButtonStyle: TextButton.styleFrom(
+        foregroundColor: CustomColor.onCardLight,
+      ),
+      confirmButtonStyle: TextButton.styleFrom(
+        foregroundColor: lightScheme.onPrimary,
+        backgroundColor: lightScheme.primary,
+      ),
+    ),
     extensions: [CustomColor.financeLight],
   );
 
@@ -102,6 +148,56 @@ class CustomTheme {
       }),
     ),
     snackBarTheme: SnackBarThemeData(backgroundColor: Colors.black),
+    datePickerTheme: DatePickerThemeData(
+      backgroundColor: darkScheme.surface,
+      headerBackgroundColor: darkScheme.primary,
+      headerForegroundColor: darkScheme.onPrimary,
+
+      dayForegroundColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.disabled)) {
+          return lightScheme.onSurface.withValues(alpha: 0.3);
+        } else if (states.contains(WidgetState.selected)) {
+          return darkScheme.onPrimary;
+        }
+        return darkScheme.onSurface;
+      }),
+
+      dayBackgroundColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) {
+          return darkScheme.primary;
+        }
+        return Colors.transparent;
+      }),
+
+      todayForegroundColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) {
+          return darkScheme.onPrimary;
+        }
+        return darkScheme.primary;
+      }),
+      todayBorder: BorderSide(color: darkScheme.primary),
+
+      yearForegroundColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) {
+          return darkScheme.onPrimary;
+        }
+        return darkScheme.onSurface;
+      }),
+
+      yearBackgroundColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) {
+          return darkScheme.primary;
+        }
+        return Colors.transparent;
+      }),
+
+      cancelButtonStyle: TextButton.styleFrom(
+        foregroundColor: darkScheme.onSurface,
+      ),
+      confirmButtonStyle: TextButton.styleFrom(
+        foregroundColor: darkScheme.primary,
+      ),
+    ),
     extensions: [CustomColor.financeDark],
   );
 }

@@ -95,23 +95,27 @@ class WalletsListCard extends StatelessWidget {
                                 )[controller.wallets[index].type]?['icon'],
                               ),
                               Expanded(
-                                child: Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.stretch,
-                                  spacing: 8,
-                                  children: [
-                                    CustomText.normal(
-                                      controller.wallets[index].name ?? '-',
-                                      isBold: true,
-                                      context: context,
-                                    ),
-                                    CustomText.small(
-                                      CustomConverter.doubleToCurrency(
-                                        controller.wallets[index].balance,
+                                child: Obx(
+                                  ()=> Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.stretch,
+                                    spacing: 8,
+                                    children: [
+                                      CustomText.normal(
+                                        controller.wallets[index].name ?? '-',
+                                        isBold: true,
+                                        context: context,
                                       ),
-                                      context: context,
-                                    ),
-                                  ],
+                                      CustomText.small(
+                                        controller.isObscure.value
+                                            ? "Rp••••••••"
+                                            : CustomConverter.doubleToCurrency(
+                                                controller.wallets[index].balance,
+                                              ),
+                                        context: context,
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ],

@@ -113,7 +113,7 @@ class CustomText {
     );
   }
 
-  static bulletList(List<String> items, {required BuildContext context}) {
+  static Container bulletList(List<String> items, {required BuildContext context}) {
     return Container(
       alignment: Alignment.centerLeft,
       child: Column(

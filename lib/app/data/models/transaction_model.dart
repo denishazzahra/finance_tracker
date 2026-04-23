@@ -48,7 +48,9 @@ class TransactionModel {
       'transfer': transfer?.toJson(),
       'dateTime': isArchive
           ? dateTime?.toIso8601String()
-          : FieldValue.serverTimestamp(),
+          : (dateTime != null
+                ? Timestamp.fromDate(dateTime!)
+                : FieldValue.serverTimestamp()),
     };
   }
 
@@ -85,7 +87,7 @@ class TransactionModel {
       'desc': desc,
       'dateTime': isArchive
           ? dateTime?.toIso8601String()
-          : FieldValue.serverTimestamp(),
+          : (dateTime ?? FieldValue.serverTimestamp()),
       if (transfer != null) 'transfer': transfer?.toJson(),
     };
   }

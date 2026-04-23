@@ -5,6 +5,7 @@ import 'package:material_symbols_icons/symbols.dart';
 
 import '../../../../../core/consts/app_const.dart';
 import '../../../../../core/widgets/custom_button.dart';
+import '../../../../../core/widgets/custom_date_picker.dart';
 import '../../../../../core/widgets/custom_dropdown.dart';
 import '../../../../../core/widgets/custom_text.dart';
 import '../../../../../core/widgets/custom_text_field.dart';
@@ -287,6 +288,7 @@ class InputLayout {
             context: context,
             label: "Description (optional)",
           ),
+          CustomDatePicker.datePicker(controller.dateStr, context: context, dateTime: controller.dateTime,)
         ],
       ),
     );
