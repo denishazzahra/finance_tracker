@@ -77,6 +77,8 @@ class DashboardController extends GetxController {
     desc.clear();
     adminFeeOn.value = AdminFeeOn.sender;
     adminFeeStr.value = '';
+    dateStr.text = "";
+    dateTime.value = DateTime.now();
   }
 
   void onChangeType(String val) {

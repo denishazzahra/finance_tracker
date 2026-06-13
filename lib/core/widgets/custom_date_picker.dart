@@ -16,6 +16,7 @@ class CustomDatePicker {
   }) async {
     final DateTime? pickedDate = await showDatePicker(
       context: context,
+      initialDate: dateTime.value,
       firstDate: firstDate,
       lastDate: lastDate,
     );
