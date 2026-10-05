@@ -140,6 +140,7 @@ class InputLayout {
 
   static Widget transfer({required BuildContext context}) {
     controller.resetForm();
+
     return template(
       title: "Transfer money",
       context: context,
@@ -149,91 +150,151 @@ class InputLayout {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         spacing: 16,
         children: [
-          CustomDropdown.obj(
-            "From",
-            controller.fromWallet.value,
-            controller.wallets,
-            controller.onChangeFrom,
-          ),
-          Obx(
-            () => CustomDropdown.obj(
-              "To",
-              controller.toWallet.value,
-              controller.wallets
-                  .where((e) => e.id != controller.fromWallet.value?.id)
-                  .toList(),
-              controller.onChangeTo,
-            ),
-          ),
-          CustomTextField.normal(
-            controller.amount,
-            context: context,
-            label: "Amount",
-            isNumOnly: true,
-            prefixIcon: Padding(
-              padding: EdgeInsets.all(12),
-              child: CustomText.normal("Rp", context: context),
-            ),
-          ),
-          CustomTextField.normal(
-            controller.adminFee,
-            context: context,
-            label: "Admin Fee (optional)",
-            isNumOnly: true,
-            prefixIcon: Padding(
-              padding: EdgeInsets.all(12),
-              child: CustomText.normal("Rp", context: context),
-            ),
-            onChanged: controller.trimAdminFee,
-          ),
-
+          // CustomDropdown.obj(
+          //   "From",
+          //   controller.fromWallet.value,
+          //   controller.wallets,
+          //   controller.onChangeFrom,
+          // ),
+          // Obx(
+          //   () => CustomDropdown.obj(
+          //     "To",
+          //     controller.toWallet.value,
+          //     controller.wallets
+          //         .where((e) => e.id != controller.fromWallet.value?.id)
+          //         .toList(),
+          //     controller.onChangeTo,
+          //   ),
+          // ),
+          // CustomTextField.normal(
+          //   controller.amount,
+          //   context: context,
+          //   label: "Amount",
+          //   isNumOnly: true,
+          //   prefixIcon: Padding(
+          //     padding: EdgeInsets.all(12),
+          //     child: CustomText.normal("Rp", context: context),
+          //   ),
+          // ),
+          // CustomTextField.normal(
+          //   controller.adminFee,
+          //   context: context,
+          //   label: "Admin Fee (optional)",
+          //   isNumOnly: true,
+          //   prefixIcon: Padding(
+          //     padding: EdgeInsets.all(12),
+          //     child: CustomText.normal("Rp", context: context),
+          //   ),
+          //   onChanged: controller.trimAdminFee,
+          // ),
           Obx(() {
+            final children = <Widget>[
+              CustomDropdown.obj(
+                "From",
+                controller.fromWallet.value,
+                controller.wallets,
+                controller.onChangeFrom,
+              ),
+
+              CustomDropdown.obj(
+                "To",
+                controller.toWallet.value,
+                controller.wallets
+                    .where((e) => e.id != controller.fromWallet.value?.id)
+                    .toList(),
+                controller.onChangeTo,
+              ),
+
+              CustomTextField.normal(
+                controller.amount,
+                context: context,
+                label: "Amount",
+                isNumOnly: true,
+                prefixIcon: Padding(
+                  padding: EdgeInsets.all(12),
+                  child: CustomText.normal("Rp", context: context),
+                ),
+              ),
+
+              CustomTextField.normal(
+                controller.adminFee,
+                context: context,
+                label: "Admin Fee (optional)",
+                isNumOnly: true,
+                prefixIcon: Padding(
+                  padding: EdgeInsets.all(12),
+                  child: CustomText.normal("Rp", context: context),
+                ),
+                onChanged: controller.trimAdminFee,
+              ),
+            ];
+
             if (controller.adminFeeStr.value.isNotEmpty &&
                 controller.adminFeeStr.value != '0') {
-              return Column(
-                spacing: 12,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  CustomText.normal(
-                    "Admin Fee On",
-                    context: context,
-                    isBold: true,
-                  ),
-                  Row(
-                    children: [
-                      Obx(
-                        () => RadioGroup(
-                          groupValue: controller.adminFeeOn.value,
-                          onChanged: (val) =>
-                              controller.onChangeAdminFeeOn(val!),
-                          child: Radio(value: AdminFeeOn.sender),
+              children.add(
+                Column(
+                  spacing: 12,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    CustomText.normal(
+                      "Admin Fee On",
+                      context: context,
+                      isBold: true,
+                    ),
+                    Row(
+                      children: [
+                        Obx(
+                          () => RadioGroup(
+                            groupValue: controller.adminFeeOn.value,
+                            onChanged: (val) =>
+                                controller.onChangeAdminFeeOn(val!),
+                            child: Radio(value: AdminFeeOn.sender),
+                          ),
                         ),
-                      ),
-                      GestureDetector(
-                        onTap: () =>
-                            controller.onChangeAdminFeeOn(AdminFeeOn.sender),
-                        child: CustomText.normal('Sender', context: context),
-                      ),
-                      SizedBox(width: 16),
-                      Obx(
-                        () => RadioGroup(
-                          groupValue: controller.adminFeeOn.value,
-                          onChanged: (val) =>
-                              controller.onChangeAdminFeeOn(val!),
-                          child: Radio(value: AdminFeeOn.recipient),
+                        GestureDetector(
+                          onTap: () =>
+                              controller.onChangeAdminFeeOn(AdminFeeOn.sender),
+                          child: CustomText.normal('Sender', context: context),
                         ),
-                      ),
-                      GestureDetector(
-                        onTap: () =>
-                            controller.onChangeAdminFeeOn(AdminFeeOn.recipient),
-                        child: CustomText.normal('Recipient', context: context),
-                      ),
-                    ],
-                  ),
-                ],
+                        SizedBox(width: 16),
+                        Obx(
+                          () => RadioGroup(
+                            groupValue: controller.adminFeeOn.value,
+                            onChanged: (val) =>
+                                controller.onChangeAdminFeeOn(val!),
+                            child: Radio(value: AdminFeeOn.recipient),
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () => controller.onChangeAdminFeeOn(
+                            AdminFeeOn.recipient,
+                          ),
+                          child: CustomText.normal(
+                            'Recipient',
+                            context: context,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               );
             }
-            return SizedBox.shrink();
+
+            children.add(
+              CustomDatePicker.datePicker(
+                controller.dateStr,
+                context: context,
+                dateTime: controller.dateTime,
+              ),
+            );
+
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              spacing: 16,
+              children: children,
+            );
           }),
         ],
       ),
@@ -288,7 +349,11 @@ class InputLayout {
             context: context,
             label: "Description (optional)",
           ),
-          CustomDatePicker.datePicker(controller.dateStr, context: context, dateTime: controller.dateTime,)
+          CustomDatePicker.datePicker(
+            controller.dateStr,
+            context: context,
+            dateTime: controller.dateTime,
+          ),
         ],
       ),
     );

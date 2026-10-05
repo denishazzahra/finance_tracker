@@ -218,6 +218,7 @@ class DashboardController extends GetxController {
               ) ??
               0,
           adminFeeOn: adminFeeOn.value,
+          dateTime: dateTime.value
         );
         await WalletService.transfer(transfer: transfer);
         Get.snackbar(

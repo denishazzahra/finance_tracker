@@ -36,6 +36,7 @@ class TransactionModel {
       category: isCash ? 'Others' : 'Top-up',
       desc: desc,
       transfer: transfer,
+      dateTime: transfer.dateTime
     );
   }
 

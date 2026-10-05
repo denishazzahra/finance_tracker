@@ -145,6 +145,7 @@ Widget summaryChart({
     if (filteredTrans.isEmpty) {
       return noTransaction(context: context, onRefresh: onRefresh);
     }
+    filteredTrans.sort((a, b) => b.amount!.abs().compareTo(a.amount!.abs()));
     double overallTotal = 0;
     Map<String, double> totals = {};
     for (TransactionModel transaction in filteredTrans) {
@@ -152,6 +153,9 @@ Widget summaryChart({
           (totals[transaction.category] ?? 0) + transaction.amount!.abs();
       overallTotal += transaction.amount!.abs();
     }
+    totals = Map.fromEntries(
+      totals.entries.toList()..sort((a, b) => b.value.compareTo(a.value)),
+    );
 
     return RefreshIndicator(
       onRefresh: () => onRefresh(),

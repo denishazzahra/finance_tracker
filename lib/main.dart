@@ -26,7 +26,7 @@ void main() async {
   FlutterNativeSplash.remove();
   runApp(
     GetMaterialApp(
-      title: "Application",
+      title: "Finora",
       debugShowCheckedModeBanner: false,
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,

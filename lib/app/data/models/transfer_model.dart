@@ -8,6 +8,7 @@ class TransferModel {
   double amount;
   double adminFee;
   AdminFeeOn adminFeeOn;
+  DateTime? dateTime;
 
   TransferModel({
     required this.from,
@@ -15,6 +16,7 @@ class TransferModel {
     required this.amount,
     this.adminFee = 0,
     this.adminFeeOn = AdminFeeOn.sender,
+    this.dateTime
   });
 
   factory TransferModel.fromJson(Map<String, dynamic> json) {
